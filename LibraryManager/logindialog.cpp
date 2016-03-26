@@ -131,7 +131,7 @@ void LoginDialog::finishHttp(QNetworkReply *reply)
 {
     if(reply->error() == QNetworkReply::NoError)
     {
-        QString repData = QString::fromLocal8Bit(reply->readAll());
+        QString repData = QString(reply->readAll());
         qDebug()<<repData;
     }else{
         StyleTool::getInstance()->netError();
@@ -151,8 +151,8 @@ void LoginDialog::on_adminLoginBtn_clicked() //管理员登陆
         return;
     }
     QNetworkRequest req(QUrl(Tool::urlRoot+"login"));
-    QString postSrt = "username="+id+"&password"+pwd+"&logintype=2";
-    QByteArray postData = postSrt.toLocal8Bit();
+    QString postSrt = "username="+id+"&password="+pwd+"&logintype=2";
+    QByteArray postData = postSrt.toUtf8();
     mutex = false;
     loginType = 2;
     netManager->post(req,postData);
