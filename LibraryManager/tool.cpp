@@ -1,8 +1,10 @@
 #include "tool.h"
 
 Tool *Tool::instance =  NULL;
+QString Tool::urlRoot = "http://127.0.0.1:5000/";
 Tool::Tool()
 {
+    cookieJar = new QNetworkCookieJar;
     db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName("library.db");
     db.open();
@@ -40,4 +42,9 @@ void Tool::initMapData()
         bc.time = query.value(2).toInt();
         bookClass.insert(bc.name,bc);
     }
+}
+
+QNetworkCookieJar *Tool::getCookieJar()
+{
+    return this->cookieJar;
 }

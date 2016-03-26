@@ -4,6 +4,7 @@
 #include <QDialog>
 #include <QMouseEvent>
 #include <QDesktopWidget>
+#include "tool.h"
 
 namespace Ui {
 class LoginDialog;
@@ -30,6 +31,7 @@ private slots:
     void on_adminLoginBtn_clicked();
 
     void changeSkin();
+    void finishHttp(QNetworkReply *reply);
 private:
     Ui::LoginDialog *ui;
     QPoint mousePoint;
@@ -37,6 +39,10 @@ private:
     QRect location;
     void InitStyle();
     void init();
+
+    int loginType;
+    bool mutex;
+    QNetworkAccessManager * netManager;
 };
 
 #endif // LOGINDIALOG_H

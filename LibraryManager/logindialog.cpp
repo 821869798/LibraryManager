@@ -120,11 +120,29 @@ void LoginDialog::init()
     ui->le2->setEchoMode(QLineEdit::Password);
     ui->le4->setEchoMode(QLineEdit::Password);
 
+    mutex = true;
+    netManager = new QNetworkAccessManager;
+    netManager->setCookieJar(Tool::getInstance()->getCookieJar());
+    connect(netManager,&QNetworkAccessManager::finished,this,&LoginDialog::finishHttp);
+
 }
 
+void LoginDialog::finishHttp(QNetworkReply *reply)
+{
+    if(reply->error() == QNetworkReply::NoError)
+    {
+        QString repData = QString::fromLocal8Bit(reply->readAll());
+        qDebug()<<repData;
+    }else{
+        StyleTool::getInstance()->netError();
+    }
+    mutex = true;
+}
 
 void LoginDialog::on_adminLoginBtn_clicked() //管理员登陆
 {
+    if(!mutex)
+        return;
     QString id = ui->le3->text().trimmed();
     QString pwd = ui->le4->text().trimmed();
     if(id=="" || pwd=="")  //账号或密码为空
@@ -132,19 +150,27 @@ void LoginDialog::on_adminLoginBtn_clicked() //管理员登陆
         StyleTool::getInstance()->messageBoxError("账号或密码不能为空"); //弹出消息提示框
         return;
     }
-    QSqlDatabase db = Tool::getInstance()->getDb();
-    QSqlQuery query(db);
-    QString sql;
-    if(ui->adminTypeBox->currentIndex()==1){
-        sql = "select * from 管理员 where 账号=:id and 密码=:pwd";
-    }else{
-        sql = "select * from 系统管理员 where 账号=:id and 密码=:pwd";
-    }
-    query.prepare(sql);
-    query.bindValue(":id",id);
-    query.bindValue(":pwd",pwd);
-    query.exec();
-    if(query.next()){
+    QNetworkRequest req(QUrl(Tool::urlRoot+"login"));
+    QString postSrt = "username="+id+"&password"+pwd+"&logintype=2";
+    QByteArray postData = postSrt.toLocal8Bit();
+    mutex = false;
+    loginType = 2;
+    netManager->post(req,postData);
+
+
+//    QSqlDatabase db = Tool::getInstance()->getDb();
+//    QSqlQuery query(db);
+//    QString sql;
+//    if(ui->adminTypeBox->currentIndex()==1){
+//        sql = "select * from 管理员 where 账号=:id and 密码=:pwd";
+//    }else{
+//        sql = "select * from 系统管理员 where 账号=:id and 密码=:pwd";
+//    }
+//    query.prepare(sql);
+//    query.bindValue(":id",id);
+//    query.bindValue(":pwd",pwd);
+//    query.exec();
+//    if(query.next()){
         //        UsrInformation::getInstance()->id = query.value(0).toString();
         //        UsrInformation::getInstance()->type = query.value(4).toInt(0);
         //        UsrInformation::getInstance()->borrowNum = query.value(5).toInt(0);
@@ -157,13 +183,13 @@ void LoginDialog::on_adminLoginBtn_clicked() //管理员登陆
 //            RootAdminDialog *rad = new RootAdminDialog();
 //            rad->show();
 //        }
-        RootAdminDialog *rad = new RootAdminDialog();
-        rad->show();
-        this->close();
-    }
-    else{
-        StyleTool::getInstance()->messageBoxError("账号或密码错误");
-        ui->le3->setText("");
-        ui->le4->setText("");
-    }
+//        RootAdminDialog *rad = new RootAdminDialog();
+//        rad->show();
+//        this->close();
+//    }
+//    else{
+//        StyleTool::getInstance()->messageBoxError("账号或密码错误");
+//        ui->le3->setText("");
+//        ui->le4->setText("");
+//    }
 }

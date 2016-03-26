@@ -27,6 +27,7 @@ public:
     void messageBoxError(QString info);  //显示错误框,仅确定按钮
 
     QString showInputBox(QString info, bool &ok);
+    void netError();
 };
 
 #endif // STYLETOOL_H

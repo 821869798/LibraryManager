@@ -63,6 +63,10 @@ void StyleTool::messageBoxError(QString info)
     msg->exec();
 }
 
+void StyleTool::netError()
+{
+    messageBoxError("网络连接失败！");
+}
 
 QString StyleTool::showInputBox(QString info, bool &ok) {
         SkinInputBox input;
