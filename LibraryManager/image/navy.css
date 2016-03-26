@@ -113,13 +113,13 @@ QRadioButton::indicator::checked {
 	image: url(:/image/radio_selected.png); 
 }
 
-QComboBox,QDateEdit{
+QComboBox,QDateEdit,QTimeEdit,QDateTimeEdit{
 	border-radius: 3px;
 	padding: 1px 10px 1px 5px;
 	border: 1px solid #50A3F0;
 }
 
-QComboBox::drop-down,QDateEdit::drop-down {
+QComboBox::drop-down,QDateEdit::drop-down,QTimeEdit::drop-down,QDateTimeEdit::drop-down{
 	subcontrol-origin: padding;
 	subcontrol-position: top right;
 	width: 15px; 
