@@ -1,2 +1,3 @@
 /build*/
 /LibraryManager/*.pro.user
+/LibraryServer/*.sqlite

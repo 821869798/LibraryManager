@@ -11,6 +11,11 @@ manager.add_command("runserver", Server('0.0.0.0', port=5000))
 @manager.command
 def createall():
     db.create_all()
+    f = open("static/默认数据.txt","r",encoding="utf-8")
+    for line in f.readlines():
+        db.session.execute(line)
+    f.close()
+    db.session.commit()
 
 @manager.command
 def dropall():
@@ -18,4 +23,7 @@ def dropall():
         db.drop_all()
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    manager.run()
+
+# if __name__ == "__main__":
+#     app.run(debug=True)
