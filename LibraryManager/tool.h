@@ -4,6 +4,7 @@
 #include <QDebug>
 #include <QMap>
 #include "sqldata.h"
+#include <QtNetwork>
 
 class Tool
 {
@@ -15,10 +16,13 @@ public:
     void initMapData();
     QMap<QString,BookClassData> bookClass;
     QMap<QString,int> identification;
+    QNetworkCookieJar *getCookieJar();
+    static QString urlRoot;
 
 private:
     static Tool *instance;
     QSqlDatabase db;
+    QNetworkCookieJar *cookieJar;
 
 };
 
