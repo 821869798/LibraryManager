@@ -132,7 +132,13 @@ void LoginDialog::finishHttp(QNetworkReply *reply)
     if(reply->error() == QNetworkReply::NoError)
     {
         QString repData = QString(reply->readAll());
-        qDebug()<<repData;
+        if(repData=="true"){
+            RootAdminDialog * rad = new RootAdminDialog;
+            rad->show();
+            this->close();
+        }else{
+             StyleTool::getInstance()->messageBoxError("账号或密码错误！");
+        }
     }else{
         StyleTool::getInstance()->netError();
     }

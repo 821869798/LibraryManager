@@ -11,6 +11,19 @@ def login():
     password = request.form.get("password")
     logintype = request.form.get("logintype")
     if username and password and logintype:
-        return "正确"
+        logintype = int(logintype)
+        if logintype is 2:
+            root = RootAdminer.query.filter_by(username=username,password=username).first()
+            if root:
+                session["username"] = username
+                session["logintype"] = 2
+                return "true"
+        elif logintype is 1:
+            pass
+        else:
+            pass
+    return "false"
 
-    return "错误"
+@app.route("/test")
+def test():
+    return "学霸"
