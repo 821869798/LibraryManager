@@ -24,4 +24,4 @@ INSERT INTO "license" VALUES (1,'护照');
 INSERT INTO "license" VALUES (2,'学生证');
 INSERT INTO "license" VALUES (3,'外国人居留证');
 INSERT INTO "license" VALUES (4,'驾驶证');
-INSERT INTO "root_adminer" VALUES (1,'root','root');
+INSERT INTO "root_adminer" VALUES (1,'root','e10adc3949ba59abbe56e057f20f883e');

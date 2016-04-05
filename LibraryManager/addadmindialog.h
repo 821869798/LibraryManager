@@ -4,6 +4,7 @@
 #include <QDialog>
 #include <QMouseEvent>
 #include <QDesktopWidget>
+#include "tool.h"
 
 
 namespace Ui {
@@ -34,6 +35,7 @@ private slots:
 
     void on_btnCancel_clicked();
 
+    void finishHttp(QNetworkReply *reply);
 private:
     QPoint mousePoint;
     bool mousePressed;
@@ -42,6 +44,10 @@ private:
     void InitStyle();
 private:
     Ui::AddAdminDialog *ui;
+
+    bool mutex;
+    QNetworkAccessManager * netManager;
+    void init();
 };
 
 #endif // ADDADMINDIALOG_H

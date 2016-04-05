@@ -13,11 +13,20 @@ AddAdminDialog::AddAdminDialog(QWidget *parent) :
     ui->setupUi(this);
     ui->passEdit->setEchoMode(QLineEdit::Password);
     this->InitStyle();
+    this->init();
 }
 
 AddAdminDialog::~AddAdminDialog()
 {
     delete ui;
+}
+
+void AddAdminDialog::init()
+{
+    netManager = new QNetworkAccessManager;
+    netManager->setCookieJar(Tool::getInstance()->getCookieJar());
+    mutex = true;
+    connect(netManager,&QNetworkAccessManager::finished,this,&AddAdminDialog::finishHttp);
 }
 
 void AddAdminDialog::mouseMoveEvent(QMouseEvent *e)
@@ -123,6 +132,23 @@ void AddAdminDialog::changeSkin()
     StyleTool::getInstance()->SetStyle((StyleTool::AppStyle)type);
 }
 
+void AddAdminDialog::finishHttp(QNetworkReply *reply)
+{
+    if(reply->error() == QNetworkReply::NoError)
+    {
+        QString repData = QString(reply->readAll());
+        if(repData=="true"){
+            StyleTool::getInstance()->messageBoxInfo("添加管理员成功！");
+            done(1);
+            this->close();
+        }else{
+            StyleTool::getInstance()->messageBoxError("添加管理员失败！");
+        }
+    }else{
+        StyleTool::getInstance()->netError();
+    }
+}
+
 void AddAdminDialog::on_btnOk_clicked()  //添加管理员的按键事件
 {
     //获取编辑框的数据
@@ -135,35 +161,23 @@ void AddAdminDialog::on_btnOk_clicked()  //添加管理员的按键事件
         StyleTool::getInstance()->messageBoxError("账号或者姓名不能为空!");
         return;
     }
-    QString sql = "";
+    QByteArray postData;
     if(pass=="")
     {
-        sql = "insert into 管理员(账号,姓名,图书管理,读者管理) values(:id,:name,:book,:reader)";
+        postData = Tool::getInstance()->getRequestData(
+                    QStringList()<<"username"<<"name"<<"bookmanage"<<"readermanage",
+                    QStringList()<<id<<name<<QString::number(bookManage)<<QString::number(readerManage));
     }
     else
     {
-        sql = "insert into 管理员(账号,姓名,密码,图书管理,读者管理) values(:id,:name,:pass,:book,:reader)";
+        postData = Tool::getInstance()->getRequestData(
+                    QStringList()<<"username"<<"name"<<"password"<<"bookmanage"<<"readermanage",
+                    QStringList()<<id<<name<<Tool::getInstance()->getMd5String(pass)<<QString::number(bookManage)<<QString::number(readerManage));
     }
-    QSqlQuery query(Tool::getInstance()->getDb());
-    query.prepare(sql);
-    query.bindValue(":id",id);
-    query.bindValue(":name",name);
-    query.bindValue(":pass",pass);
-    query.bindValue(":book",bookManage);
-    query.bindValue(":reader",readerManage);
-    bool isOk = query.exec();
-    if(isOk)
-    {
-        StyleTool::getInstance()->messageBoxInfo("添加成功!");
-        done(1);
-        this->close();
-    }else
-    {
-        StyleTool::getInstance()->messageBoxError("管理员账号已存在!");
-        ui->idEdit->setText("");
-        ui->nameEdit->setText("");
-        ui->passEdit->setText("");
-    }
+
+    QNetworkRequest req(QUrl(Tool::urlRoot+"adminer/new"));
+    mutex = false;
+    netManager->post(req,postData);
 }
 
 void AddAdminDialog::on_btnCancel_clicked()

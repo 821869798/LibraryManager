@@ -1,7 +1,6 @@
 #include "logindialog.h"
 #include "ui_logindialog.h"
 #include "styletool.h"
-#include "tool.h"
 #include "rootadmindialog.h"
 #include <QMenu>
 #include <QAction>
@@ -156,9 +155,11 @@ void LoginDialog::on_adminLoginBtn_clicked() //管理员登陆
         StyleTool::getInstance()->messageBoxError("账号或密码不能为空"); //弹出消息提示框
         return;
     }
+    pwd = Tool::getInstance()->getMd5String(pwd); //用md5加密密码
+    QByteArray postData = Tool::getInstance()->getRequestData(QStringList()<<"username"<<"password"<<"logintype",
+                                                  QStringList()<<id<<pwd<<QString::number(2));
+
     QNetworkRequest req(QUrl(Tool::urlRoot+"login"));
-    QString postSrt = "username="+id+"&password="+pwd+"&logintype=2";
-    QByteArray postData = postSrt.toUtf8();
     mutex = false;
     loginType = 2;
     netManager->post(req,postData);

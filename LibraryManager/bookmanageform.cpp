@@ -29,18 +29,45 @@ void BookManageForm::init()
     ui->typeDelBtn->setIcon(QIcon(":/image/min.png"));
     ui->typeEditBtn->setIcon(QIcon(":/image/edit.png"));
 
+    netManager = new QNetworkAccessManager;
+    netManager->setCookieJar(Tool::getInstance()->getCookieJar());
+    connect(netManager,&QNetworkAccessManager::finished,this,&BookManageForm::finishHttp);
+
     initBookData();  //初始化图书数据
     initBookClass();  //初始化图书类别
 }
 
 void BookManageForm::initBookClass() //初始化图书类别
 {
-    Tool::getInstance()->initMapData();
+    ui->listView->setEditTriggers(QAbstractItemView::NoEditTriggers);
     ui->label_type->setText("");
     ui->typeNameEdit->setText("");
     ui->borrowSumEdit->setText("");
-    ui->borrowSumEdit->setValidator(new QIntValidator(1,120,this));
     bookClassState = 0;
+
+    QNetworkRequest req(QUrl(Tool::urlRoot+"booktype/getall"));
+    netManager->get(req);
+
+//    Tool::getInstance()->initMapData();
+//    ui->label_type->setText("");
+//    ui->typeNameEdit->setText("");
+//    ui->borrowSumEdit->setText("");
+//    ui->borrowSumEdit->setValidator(new QIntValidator(1,120,this));
+//    bookClassState = 0;
+//    QStringListModel *model = new QStringListModel();
+//    QStringList sl;
+//    QMap<QString,BookClassData>::const_iterator it;
+//    for(it=Tool::getInstance()->bookClass.begin();it!=Tool::getInstance()->bookClass.end();it++)
+//    {
+//        sl.append(it.key());
+//    }
+//    model->setStringList(sl);
+//    ui->listView->setModel(model);
+//    ui->listView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+}
+
+void BookManageForm::initBookClassByArray()
+{
     QStringListModel *model = new QStringListModel();
     QStringList sl;
     QMap<QString,BookClassData>::const_iterator it;
@@ -50,7 +77,6 @@ void BookManageForm::initBookClass() //初始化图书类别
     }
     model->setStringList(sl);
     ui->listView->setModel(model);
-    ui->listView->setEditTriggers(QAbstractItemView::NoEditTriggers);
 }
 
 void BookManageForm::initBookData() //初始化图书数据
@@ -67,6 +93,50 @@ void BookManageForm::initBookData() //初始化图书数据
     ui->tv->setSortingEnabled(true);
 }
 
+
+void BookManageForm::finishHttp(QNetworkReply *reply)
+{
+    if(reply->error() == QNetworkReply::NoError)
+    {
+        QString repData = QString(reply->readAll());
+        QString path = reply->url().path();
+        if(repData!="false")
+        {
+            if(path=="/booktype/getall")
+            {
+                QJsonParseError json_error;
+                QJsonDocument jsonDocument = QJsonDocument::fromJson(repData.toUtf8(), &json_error);
+                if(json_error.error == QJsonParseError::NoError)
+                {
+                    Tool::getInstance()->initBookClassByArray(jsonDocument.object()["alldata"].toArray());
+                    initBookClassByArray();
+                }
+            }
+            else if(path=="/booktype/new")
+            {
+                initBookClass();
+                StyleTool::getInstance()->messageBoxInfo("添加成功！");
+            }
+            else if(path=="/booktype/delete")
+            {
+                initBookClass();
+                StyleTool::getInstance()->messageBoxInfo("删除成功！");
+            }
+            else if(path=="/booktype/change")
+            {
+                initBookClass();
+                StyleTool::getInstance()->messageBoxInfo("修改成功！");
+            }
+        }
+        else
+        {
+            StyleTool::getInstance()->messageBoxError("操作失败!");
+        }
+    }
+    else{
+        StyleTool::getInstance()->netError();
+    }
+}
 void BookManageForm::on_seartBtn_clicked()
 {
     QString id = ui->idEdit->text().trimmed();
@@ -146,17 +216,10 @@ void BookManageForm::on_typeDelBtn_clicked()
     if(row>=0){
         int ok = StyleTool::getInstance()->messageBoxQuesion("确认要删除该图书类型吗？");
         if(ok==1){
-            QSqlQuery query(Tool::getInstance()->getDb());
             QString typeStr = ui->listView->model()->data(ui->listView->currentIndex()).toString();
-            BookClassData bc = Tool::getInstance()->bookClass[typeStr];
-            query.exec("select * from 图书 where 图书类型="+QString::number(bc.id));
-            if(query.next()){
-                StyleTool::getInstance()->messageBoxError("该类型的图书已存在，不能删除");
-            }else{
-                query.exec("delete from 图书类型 where 类型简称="+QString::number(bc.id));
-                StyleTool::getInstance()->messageBoxInfo("执行成功！");
-                initBookClass();
-            }
+            int bt_id = Tool::getInstance()->bookClass[typeStr].id;
+            QNetworkRequest req(QUrl(Tool::urlRoot+"booktype/delete?id="+QString::number(bt_id)));
+            netManager->get(req);
         }
     }
 
@@ -196,19 +259,16 @@ void BookManageForm::on_typeSubmitBtn_clicked()
             StyleTool::getInstance()->messageBoxError("类型名称不能为空");
             return;
         }
-        QString sql;
-        if(borrow==""){
-            sql = "insert into 图书类型(类型名称) values(:name)";
-        }else{
-            sql = "insert into 图书类型(类型名称,可借天数) values(:name,:borrow)";
+        QStringList list1,list2;
+        list1<<"name";
+        list2<<name;
+        if(borrow!=""&&borrow.toInt()>0){
+            list1<<"borrownum";
+            list2<<borrow;
         }
-        QSqlQuery query(Tool::getInstance()->getDb());
-        query.prepare(sql);
-        query.bindValue(":name",name);
-        query.bindValue(":borrow",borrow);
-        query.exec();
-        StyleTool::getInstance()->messageBoxInfo("执行成功！");
-        initBookClass();
+        QByteArray postData = Tool::getInstance()->getRequestData(list1,list2);
+        QNetworkRequest req(QUrl(Tool::urlRoot+"booktype/new"));
+        netManager->post(req,postData);
     }else if(bookClassState==2){
         QString name = ui->typeNameEdit->text().trimmed();
         QString borrow = ui->borrowSumEdit->text().trimmed();
@@ -216,14 +276,20 @@ void BookManageForm::on_typeSubmitBtn_clicked()
             StyleTool::getInstance()->messageBoxError("数据不合法！");
             return;
         }
-        QSqlQuery query(Tool::getInstance()->getDb());
-        query.prepare("update 图书类型 set 类型名称=:name,可借天数=:borrow where 类型简称=:id");
-        query.bindValue(":name",name);
-        query.bindValue(":borrow",borrow);
-        query.bindValue(":id",currentClass);
-        query.exec();
-        StyleTool::getInstance()->messageBoxInfo("执行成功！");
-        initBookClass();
+        QByteArray postData = Tool::getInstance()->getRequestData(
+                    QStringList()<<"id"<<"name"<<"borrownum",
+                    QStringList()<<QString::number(currentClass)<<name<<borrow);
+        QNetworkRequest req(QUrl(Tool::urlRoot+"booktype/change"));
+        netManager->post(req,postData);
+
+//        QSqlQuery query(Tool::getInstance()->getDb());
+//        query.prepare("update 图书类型 set 类型名称=:name,可借天数=:borrow where 类型简称=:id");
+//        query.bindValue(":name",name);
+//        query.bindValue(":borrow",borrow);
+//        query.bindValue(":id",currentClass);
+//        query.exec();
+//        StyleTool::getInstance()->messageBoxInfo("执行成功！");
+//        initBookClass();
     }
 }
 

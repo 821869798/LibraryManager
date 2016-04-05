@@ -2,6 +2,7 @@
 #define ADMINMANAGEFORM_H
 
 #include <QWidget>
+#include "tool.h"
 
 namespace Ui {
 class AdminManageForm;
@@ -33,8 +34,14 @@ private slots:
 
     void on_delReaderPermissionBtn_clicked();
 
+     void finishHttp(QNetworkReply *reply);
 private:
     Ui::AdminManageForm *ui;
+
+    bool mutex;
+    int httpType;
+    QNetworkAccessManager * netManager;
+    void changePermission(QString value,QString type);
 };
 
 #endif // ADMINMANAGEFORM_H
