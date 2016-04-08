@@ -188,9 +188,10 @@ def booktype_delete():
 
     return "false"
 
-@app.route("/book/getsome")
+@app.route("/book/getsome",methods=["GET"])
 def book_getsome():
-    return "false"
+    page = tool.strtoint(request.args.get("page"),0)
+    return json.dumps(Book.getsome(page))
 
 @app.route("/test")
 def test():

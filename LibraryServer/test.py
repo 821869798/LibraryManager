@@ -26,5 +26,5 @@ def strtoint(s, default):
 # print(type(adminer) is Adminer)
 # print(adminer)
 # print(BookType.query.offset(1).limit(6).count())
-a = BookType.query.get(-1)
-print(strtoint(a,-1))
+
+print(Book.query.get(1).booktype.name)

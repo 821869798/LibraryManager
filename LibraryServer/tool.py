@@ -1,4 +1,4 @@
-from models import *
+from models import Adminer
 
 #str转int，带默认值
 def strtoint(s, default):

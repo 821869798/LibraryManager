@@ -73,6 +73,23 @@ class Book(db.Model):
     historys = db.relationship("History", backref="book", lazy="dynamic")
     losebooks = db.relationship("LoseBook", backref="book", lazy="dynamic")
 
+    pageCount = 10;
+
+    def toArrayData(self):
+        arr = [self.barcode, self.name,self.author,self.booktype.name,self.allcount,self.allcount-self.borrows.count()]
+        return arr;
+
+    def toCompleteData(self):
+        pass
+
+    @staticmethod
+    def getsome(offset):
+        datalist = Book.query.offset(Book.pageCount*offset).limit(Book.pageCount).all()
+        for i in range(len(datalist)):
+            datalist[i] = datalist[i].toArrayData()
+        return datalist
+
+
 # 有效证件
 
 
