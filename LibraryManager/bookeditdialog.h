@@ -15,7 +15,7 @@ class BookEditDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit BookEditDialog(int editType,BookData *data = 0,QWidget *parent = 0);
+    explicit BookEditDialog(QString currentId="",QWidget *parent = 0);
     ~BookEditDialog();
 protected:
     void mouseMoveEvent(QMouseEvent *e);
@@ -38,6 +38,7 @@ private slots:
 
     void on_delBtn_clicked();
 
+    void finishHttp(QNetworkReply *reply);
 private:
     QPoint mousePoint;
     bool mousePressed;
@@ -45,8 +46,9 @@ private:
     QRect location;
     void InitStyle();
 
-    int editType;
-    BookData *bookData;
+    QString currentId;
+    int borrownum;
+    QNetworkAccessManager * netManager;
 private:
     Ui::BookEditDialog *ui;
     void init();

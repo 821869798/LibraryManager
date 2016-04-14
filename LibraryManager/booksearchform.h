@@ -2,6 +2,7 @@
 #define BOOKSEARCHFORM_H
 
 #include <QWidget>
+#include "tool.h"
 
 namespace Ui {
 class BookSearchForm;

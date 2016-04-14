@@ -158,7 +158,31 @@
          <widget class="QTableView" name="tv"/>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_6">
+         <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="1,2,1,2,1,1,1">
+          <item>
+           <widget class="QLabel" name="label_4">
+            <property name="text">
+             <string>页码</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QSpinBox" name="box_page">
+            <property name="minimum">
+             <number>1</number>
+            </property>
+            <property name="maximum">
+             <number>999999</number>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btn_page">
+            <property name="text">
+             <string>跳转</string>
+            </property>
+           </widget>
+          </item>
           <item>
            <spacer name="horizontalSpacer_2">
             <property name="orientation">

@@ -6,6 +6,8 @@
 #include <QDesktopWidget>
 #include "adminmanageform.h"
 #include "bookmanageform.h"
+#include "readermanageform.h"
+#include "booksearchform.h"
 
 namespace Ui {
 class RootAdminDialog;
@@ -37,6 +39,10 @@ private slots:
 
     void on_btnBook_clicked();
 
+    void on_btnReader_clicked();
+
+    void on_btnSearch_clicked();
+
 private:
     QPoint mousePoint;
     bool mousePressed;
@@ -49,6 +55,8 @@ private:
     void init();
     AdminManageForm *amf;
     BookManageForm *bmf;
+    ReaderManageForm *rmf;
+    BookSearchForm *bsf;
 };
 
 #endif // ROOTADMINDIALOG_H

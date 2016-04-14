@@ -26,5 +26,8 @@ def strtoint(s, default):
 # print(type(adminer) is Adminer)
 # print(adminer)
 # print(BookType.query.offset(1).limit(6).count())
-
-print(Book.query.get(1).booktype.name)
+book = Book.query.filter_by(barcode="13").first()
+book.barcode = 14
+db.session.add(book)
+db.session.commit()
+# print(book.name)

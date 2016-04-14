@@ -2,8 +2,8 @@ from views import db,app
 from flask.ext.script import Server, Manager, prompt_bool
 from flask.ext.migrate import Migrate, MigrateCommand
 
-migrate = Migrate(app, db)
 manager = Manager(app)
+migrate = Migrate(app, db)
 manager.add_command('db', MigrateCommand)
 manager.add_command("runserver", Server('0.0.0.0', port=5000))
 

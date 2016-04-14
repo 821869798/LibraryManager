@@ -71,20 +71,21 @@ class Book(db.Model):
     allcount = db.Column(db.Integer, name=False)
     borrows = db.relationship("Borrow", backref="book", lazy="dynamic")
     historys = db.relationship("History", backref="book", lazy="dynamic")
-    losebooks = db.relationship("LoseBook", backref="book", lazy="dynamic")
+    # losebooks = db.relationship("LoseBook", backref="book", lazy="dynamic")
 
     pageCount = 10;
 
     def toArrayData(self):
         arr = [self.barcode, self.name,self.author,self.booktype.name,self.allcount,self.allcount-self.borrows.count()]
-        return arr;
+        return arr
 
     def toCompleteData(self):
-        pass
+        arr = [self.barcode,self.name,self.booktype.id,self.author,self.press,str(self.date), \
+        str(self.price),self.page,self.bookshelf,self.allcount,self.allcount-self.borrows.count()]
+        return arr
 
     @staticmethod
-    def getsome(offset):
-        datalist = Book.query.offset(Book.pageCount*offset).limit(Book.pageCount).all()
+    def getsome(datalist):
         for i in range(len(datalist)):
             datalist[i] = datalist[i].toArrayData()
         return datalist
@@ -118,7 +119,7 @@ class Reader(db.Model):
     avaliable = db.Column(db.Integer,nullable=False,default=1)
     borrows = db.relationship("Borrow", backref="reader", lazy="dynamic")
     historys = db.relationship("History", backref="reader", lazy="dynamic")
-    losebooks = db.relationship("LoseBook", backref="reader", lazy="dynamic")
+    # losebooks = db.relationship("LoseBook", backref="reader", lazy="dynamic")
 
 # 借阅信息
 
@@ -145,9 +146,9 @@ class History(db.Model):
 # 遗失图书
 
 
-class LoseBook(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    book_id = db.Column(db.Integer, db.ForeignKey("book.id"))
-    reader_id = db.Column(db.Integer, db.ForeignKey("reader.id"))
-    bdate = db.Column(db.Date, nullable=False)
-    ldate = db.Column(db.Date, nullable=False, default=date.today())
+# class LoseBook(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     book_id = db.Column(db.Integer, db.ForeignKey("book.id"))
+#     reader_id = db.Column(db.Integer, db.ForeignKey("reader.id"))
+#     bdate = db.Column(db.Date, nullable=False)
+#     ldate = db.Column(db.Date, nullable=False, default=date.today())

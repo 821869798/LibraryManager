@@ -5,21 +5,21 @@
 #include <QMenu>
 #include <QAction>
 
-BookEditDialog::BookEditDialog(int editType,BookData *data,QWidget *parent) :
+BookEditDialog::BookEditDialog(QString currentId,QWidget *parent) :
     QDialog(parent),
     ui(new Ui::BookEditDialog)
 {
     ui->setupUi(this);
     InitStyle();
-    this->editType = editType;
-    this->bookData = data;
+    this->currentId = currentId;
+    netManager = new QNetworkAccessManager;
+    netManager->setCookieJar(Tool::getInstance()->getCookieJar());
+    connect(netManager,&QNetworkAccessManager::finished,this,&BookEditDialog::finishHttp);
     init();
 }
 
 BookEditDialog::~BookEditDialog()
 {
-    if(editType==1)
-        delete bookData;
     delete ui;
 }
 
@@ -128,6 +128,7 @@ void BookEditDialog::changeSkin()
 }
 
 void BookEditDialog::init(){
+
     ui->addBTn->setIcon(QIcon(":/image/add.png"));
     ui->delBtn->setIcon(QIcon(":/image/min.png"));
     ui->numLabel->setAlignment(Qt::AlignCenter);
@@ -135,37 +136,96 @@ void BookEditDialog::init(){
     ui->priceEdit->setValidator(new QDoubleValidator(0,10000,2));
     ui->pageEdit->setValidator(new QIntValidator(0,10000));
     ui->bookCaseEdit->setValidator(new QIntValidator(0,1000));
+
     QStringList sl;
-    QString typeStr;
     QMap<QString,BookClassData>::const_iterator it;
     for(it=Tool::getInstance()->bookClass.begin();it!=Tool::getInstance()->bookClass.end();it++)
     {
         sl.append(it.key());
-        if(editType==1&&it.value().id==bookData->type){
-            typeStr = it.key();
-        }
     }
     ui->typeBox->addItems(sl);
-    if(editType==1){
+    if(currentId!="")
+    {
         ui->lab_Title->setText("编辑图书窗口");
         this->setWindowTitle("编辑图书窗口");
-        ui->idEdit->setEnabled(false);
         ui->btnOk->setText("修改");
-        ui->idEdit->setText(bookData->id);
-        ui->nameEdit->setText(bookData->name);
-        ui->authorEdit->setText(bookData->author);
-        ui->typeBox->setCurrentText(typeStr);
-        ui->publisherEdit->setText(bookData->publisher);
-        ui->dateEdit->setDate(bookData->date);
-        ui->priceEdit->setText(QString::number(bookData->price));
-        ui->pageEdit->setText(QString::number(bookData->page));
-        ui->bookCaseEdit->setText(QString::number(bookData->bookCase));
-        ui->numLabel->setText(QString::number(bookData->allNum));
+        QNetworkRequest req(QUrl(Tool::urlRoot+"book/getcomplete?barcode="+currentId));
+        netManager->get(req);
     }
-    else if(editType){
-        ui->lab_Title->setText("添加图书窗口");
-        this->setWindowTitle("添加图书窗口");
-        ui->btnOk->setText("提交");
+//    if(editType==1){
+//        ui->lab_Title->setText("编辑图书窗口");
+//        this->setWindowTitle("编辑图书窗口");
+//        ui->idEdit->setEnabled(false);
+//        ui->btnOk->setText("修改");
+//        ui->idEdit->setText(bookData->id);
+//        ui->nameEdit->setText(bookData->name);
+//        ui->authorEdit->setText(bookData->author);
+//        ui->typeBox->setCurrentText(typeStr);
+//        ui->publisherEdit->setText(bookData->publisher);
+//        ui->dateEdit->setDate(bookData->date);
+//        ui->priceEdit->setText(QString::number(bookData->price));
+//        ui->pageEdit->setText(QString::number(bookData->page));
+//        ui->bookCaseEdit->setText(QString::number(bookData->bookCase));
+//        ui->numLabel->setText(QString::number(bookData->allNum));
+//    }
+//    else if(editType){
+//        ui->lab_Title->setText("添加图书窗口");
+//        this->setWindowTitle("添加图书窗口");
+//        ui->btnOk->setText("提交");
+//    }
+}
+
+void BookEditDialog::finishHttp(QNetworkReply *reply)
+{
+    if(reply->error() == QNetworkReply::NoError)
+    {
+        QString repData = QString(reply->readAll());
+        QString path = reply->url().path();
+        if(repData!="false")
+        {
+            if(path=="/book/getcomplete")
+            {
+                QJsonParseError json_error;
+                QJsonDocument jsonDocument = QJsonDocument::fromJson(repData.toUtf8(), &json_error);
+                if(json_error.error == QJsonParseError::NoError)
+                {
+                    QJsonArray array = jsonDocument.array();
+                    ui->idEdit->setText(array[0].toString());
+                    ui->nameEdit->setText(array[1].toString());
+                    int btype = array[2].toInt();
+                    QMap<QString,BookClassData>::const_iterator it;
+                    for(it=Tool::getInstance()->bookClass.begin();it!=Tool::getInstance()->bookClass.end();it++)
+                    {
+                        if(it.value().id==btype)
+                        {
+                            ui->typeBox->setCurrentText(it.value().name);
+                        }
+                    }
+                    ui->authorEdit->setText(array[3].toString());
+                    ui->publisherEdit->setText(array[4].toString());
+                    ui->dateEdit->setDate(QDate::fromString(array[5].toString(),"yyyy-MM-dd"));
+                    ui->priceEdit->setText(QString::number(array[6].toDouble(0)));
+                    ui->pageEdit->setText(QString::number(array[7].toInt()));
+                    ui->bookCaseEdit->setText(QString::number(array[8].toInt()));
+                    ui->numLabel->setText(QString::number(array[9].toInt()));
+                    borrownum = array[10].toInt();
+                }
+            }
+            if(path=="/book/new"||path=="/book/change")
+            {
+                StyleTool::getInstance()->messageBoxInfo("执行成功！");
+                this->close();
+                done(1);
+            }
+
+        }
+        else
+        {
+            StyleTool::getInstance()->messageBoxError("操作失败!");
+        }
+    }
+    else{
+        StyleTool::getInstance()->netError();
     }
 }
 
@@ -176,9 +236,9 @@ void BookEditDialog::on_btnOk_clicked()  //提交按钮
     QString name = ui->nameEdit->text().trimmed();
     QString author = ui->authorEdit->text().trimmed();
     int type = Tool::getInstance()->bookClass[ui->typeBox->currentText()].id;
-    QString publisher = ui->publisherEdit->text().trimmed();
+    QString press = ui->publisherEdit->text().trimmed();
     QString date = ui->dateEdit->date().toString("yyyy-MM-dd");
-    if(id==""||name==""||author==""||publisher==""||ui->priceEdit->text().trimmed()==""||
+    if(id==""||name==""||author==""||press==""||ui->priceEdit->text().trimmed()==""||
             ui->pageEdit->text().trimmed()==""||ui->bookCaseEdit->text().trimmed()==""){
         StyleTool::getInstance()->messageBoxError("输入信息不完整！");
     }
@@ -186,33 +246,60 @@ void BookEditDialog::on_btnOk_clicked()  //提交按钮
     int page = ui->pageEdit->text().trimmed().toInt();
     int bookCase = ui->bookCaseEdit->text().trimmed().toInt();
     int num = ui->numLabel->text().toInt();
-    QString sql;
-    if(editType==1){
-        sql = "update 图书 set 书名=:name,图书类型=:type,作者=:author,出版社=:publisher,出版日期=:date,价格=:price,页码=:page,所在书架=:bookCase,馆藏总数=:allNum,在馆数=:nowNum where 图书条形码=:id";
-    }else{
-        sql = "insert into 图书 values(:id,:name,:type,:author,:publisher,:date,:price,:page,:bookCase,:allNum,:nowNum)";
+    QJsonArray array;
+    array.append(id);
+    array.append(name);
+    array.append(type);
+    array.append(author);
+    array.append(press);
+    array.append(date);
+    array.append(price);
+    array.append(page);
+    array.append(bookCase);
+    array.append(num);
+    if(currentId!=""){
+        array.append(currentId);
     }
-    QSqlQuery query(Tool::getInstance()->getDb());
-    query.prepare(sql);
-    query.bindValue(":id",id);
-    query.bindValue(":name",name);
-    query.bindValue(":type",type);
-    query.bindValue(":author",author);
-    query.bindValue(":publisher",publisher);
-    query.bindValue(":date",date);
-    query.bindValue(":price",price);
-    query.bindValue(":page",page);
-    query.bindValue(":bookCase",bookCase);
-    query.bindValue(":allNum",num);
-    if(editType==1)
-        query.bindValue(":nowNum",bookData->nowNum);
+    QJsonDocument document;
+    document.setArray(array);
+    QString json_str(document.toJson());
+    QByteArray postData =  Tool::getInstance()->getRequestData(
+                QStringList()<<"data",QStringList()<<json_str);
+    QNetworkRequest req;
+    if(currentId=="")
+        req.setUrl(QUrl(Tool::urlRoot+"book/new"));
     else
-        query.bindValue(":nowNum",num);
-    query.exec();
-    qDebug()<<query.lastQuery();
-    StyleTool::getInstance()->messageBoxInfo("执行成功！");
-    this->close();
-    done(1);
+        req.setUrl(QUrl(Tool::urlRoot+"book/change"));
+    netManager->post(req,postData);
+
+
+//    QString sql;
+//    if(editType==1){
+//        sql = "update 图书 set 书名=:name,图书类型=:type,作者=:author,出版社=:publisher,出版日期=:date,价格=:price,页码=:page,所在书架=:bookCase,馆藏总数=:allNum,在馆数=:nowNum where 图书条形码=:id";
+//    }else{
+//        sql = "insert into 图书 values(:id,:name,:type,:author,:publisher,:date,:price,:page,:bookCase,:allNum,:nowNum)";
+//    }
+//    QSqlQuery query(Tool::getInstance()->getDb());
+//    query.prepare(sql);
+//    query.bindValue(":id",id);
+//    query.bindValue(":name",name);
+//    query.bindValue(":type",type);
+//    query.bindValue(":author",author);
+//    query.bindValue(":publisher",publisher);
+//    query.bindValue(":date",date);
+//    query.bindValue(":price",price);
+//    query.bindValue(":page",page);
+//    query.bindValue(":bookCase",bookCase);
+//    query.bindValue(":allNum",num);
+//    if(editType==1)
+//        query.bindValue(":nowNum",bookData->nowNum);
+//    else
+//        query.bindValue(":nowNum",num);
+//    query.exec();
+//    qDebug()<<query.lastQuery();
+//    StyleTool::getInstance()->messageBoxInfo("执行成功！");
+//    this->close();
+//    done(1);
 
 }
 
@@ -225,21 +312,15 @@ void BookEditDialog::on_addBTn_clicked()
 {
     int num = ui->numLabel->text().toInt();
     num++;
-    if(editType==1){
-        bookData->allNum++;
-        bookData->nowNum++;
-    }
     ui->numLabel->setText(QString::number(num));
 }
 
 void BookEditDialog::on_delBtn_clicked()
 {
     int num = ui->numLabel->text().toInt();
-    if(editType==1){
-        if(bookData->nowNum>0&&num>1){
+    if(currentId!=""){
+        if(num>1&&num-borrownum>0){
             num--;
-            bookData->nowNum--;
-            bookData->allNum--;
         }
     }else{
         if(num>1){

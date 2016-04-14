@@ -134,9 +134,15 @@ void RootAdminDialog::init()
 {
     amf = new AdminManageForm();
     bmf = new BookManageForm();
+    rmf = new ReaderManageForm();
+    bsf = new BookSearchForm();
     ui->h1->addWidget(amf);
     ui->h1->addWidget(bmf);
+    ui->h1->addWidget(rmf);
+    ui->h1->addWidget(bsf);
     bmf->hide();
+    rmf->hide();
+    bsf->hide();
 }
 
 void RootAdminDialog::changeSkin()
@@ -148,11 +154,32 @@ void RootAdminDialog::changeSkin()
 void RootAdminDialog::on_btnAdmin_clicked()
 {
     bmf->hide();
+    bsf->hide();
+    rmf->hide();
     amf->show();
+
 }
 
 void RootAdminDialog::on_btnBook_clicked()
 {
     amf->hide();
+    bsf->hide();
+    rmf->hide();
     bmf->show();
+}
+
+void RootAdminDialog::on_btnReader_clicked()
+{
+    amf->hide();
+    bsf->hide();
+    rmf->show();
+    bmf->hide();
+}
+
+void RootAdminDialog::on_btnSearch_clicked()
+{
+    amf->hide();
+    bsf->show();
+    rmf->hide();
+    bmf->hide();
 }

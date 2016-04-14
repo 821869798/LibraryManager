@@ -33,7 +33,18 @@ void BookManageForm::init()
     netManager->setCookieJar(Tool::getInstance()->getCookieJar());
     connect(netManager,&QNetworkAccessManager::finished,this,&BookManageForm::finishHttp);
 
-    initBookData();  //初始化图书数据
+    //初始化tableviewtc
+    QStandardItemModel *model = new QStandardItemModel;
+    QStringList list;
+    list<<"图书条形码"<<"书名"<<"作者"<<"图书类型"<<"馆藏总数"<<"在馆数";
+    model->setHorizontalHeaderLabels(list);
+    ui->tv->setModel(model);
+    ui->tv->setSortingEnabled(true);
+    ui->tv->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    ui->tv->setSelectionMode(QAbstractItemView::SingleSelection);
+    ui->tv->setSelectionBehavior(QAbstractItemView::SelectRows);
+
+    initBookData(1);  //初始化图书数据
     initBookClass();  //初始化图书类别
 }
 
@@ -43,27 +54,12 @@ void BookManageForm::initBookClass() //初始化图书类别
     ui->label_type->setText("");
     ui->typeNameEdit->setText("");
     ui->borrowSumEdit->setText("");
+    ui->borrowSumEdit->setValidator(new QIntValidator(1,120,this));
     bookClassState = 0;
 
     QNetworkRequest req(QUrl(Tool::urlRoot+"booktype/getall"));
     netManager->get(req);
 
-//    Tool::getInstance()->initMapData();
-//    ui->label_type->setText("");
-//    ui->typeNameEdit->setText("");
-//    ui->borrowSumEdit->setText("");
-//    ui->borrowSumEdit->setValidator(new QIntValidator(1,120,this));
-//    bookClassState = 0;
-//    QStringListModel *model = new QStringListModel();
-//    QStringList sl;
-//    QMap<QString,BookClassData>::const_iterator it;
-//    for(it=Tool::getInstance()->bookClass.begin();it!=Tool::getInstance()->bookClass.end();it++)
-//    {
-//        sl.append(it.key());
-//    }
-//    model->setStringList(sl);
-//    ui->listView->setModel(model);
-//    ui->listView->setEditTriggers(QAbstractItemView::NoEditTriggers);
 }
 
 void BookManageForm::initBookClassByArray()
@@ -79,18 +75,24 @@ void BookManageForm::initBookClassByArray()
     ui->listView->setModel(model);
 }
 
-void BookManageForm::initBookData() //初始化图书数据
+void BookManageForm::initBookData(int page) //初始化图书数据
 {
     ui->idEdit->setText("");
-    QSqlQueryModel *model = new QSqlQueryModel;
-    model->setQuery("select 图书条形码,书名,作者 from 图书");
-    ui->tv->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    ui->tv->setSelectionMode(QAbstractItemView::SingleSelection);
-    ui->tv->setSelectionBehavior(QAbstractItemView::SelectRows);
-    QSortFilterProxyModel *sqlproxy = new QSortFilterProxyModel(this);
-    sqlproxy->setSourceModel(model);
-    ui->tv->setModel(sqlproxy);
-    ui->tv->setSortingEnabled(true);
+    ui->box_page->setValue(page);
+
+    QNetworkRequest req(QUrl(Tool::urlRoot+"book/query?page="+QString::number(page-1)));
+    netManager->get(req);
+
+
+//    QSqlQueryModel *model = new QSqlQueryModel;
+//    model->setQuery("select 图书条形码,书名,作者 from 图书");
+//    ui->tv->setEditTriggers(QAbstractItemView::NoEditTriggers);
+//    ui->tv->setSelectionMode(QAbstractItemView::SingleSelection);
+//    ui->tv->setSelectionBehavior(QAbstractItemView::SelectRows);
+//    QSortFilterProxyModel *sqlproxy = new QSortFilterProxyModel(this);
+//    sqlproxy->setSourceModel(model);
+//    ui->tv->setModel(sqlproxy);
+//    ui->tv->setSortingEnabled(true);
 }
 
 
@@ -127,6 +129,22 @@ void BookManageForm::finishHttp(QNetworkReply *reply)
                 initBookClass();
                 StyleTool::getInstance()->messageBoxInfo("修改成功！");
             }
+            else if(path=="/book/query")
+            {
+                QJsonParseError json_error;
+                QJsonDocument jsonDocument = QJsonDocument::fromJson(repData.toUtf8(), &json_error);
+                if(json_error.error == QJsonParseError::NoError)
+                {
+                    //Tool::getInstance()->initBookClassByArray(jsonDocument.object()["alldata"].toArray());
+                    int rowCount = ui->tv->model()->rowCount();
+                    ui->tv->model()->removeRows(0,rowCount);
+                    Tool::getInstance()->tableAddData(ui->tv,jsonDocument.array());
+                }
+            }else if(path=="/book/delete")
+            {
+                initBookData(1);
+                StyleTool::getInstance()->messageBoxInfo("删除成功！");
+            }
         }
         else
         {
@@ -139,15 +157,24 @@ void BookManageForm::finishHttp(QNetworkReply *reply)
 }
 void BookManageForm::on_seartBtn_clicked()
 {
-    QString id = ui->idEdit->text().trimmed();
-    QSqlQueryModel *model = new QSqlQueryModel;
-    model->setQuery("select 图书条形码,书名,作者 from 图书 where 图书条形码="+id);
-    ui->tv->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    ui->tv->setSelectionMode(QAbstractItemView::SingleSelection);
-    ui->tv->setSelectionBehavior(QAbstractItemView::SelectRows);
-    QSortFilterProxyModel *sqlproxy = new QSortFilterProxyModel(this);
-    sqlproxy->setSourceModel(model);
-    ui->tv->setModel(sqlproxy);
+//    QString id = ui->idEdit->text().trimmed();
+//    QSqlQueryModel *model = new QSqlQueryModel;
+//    model->setQuery("select 图书条形码,书名,作者 from 图书 where 图书条形码="+id);
+//    ui->tv->setEditTriggers(QAbstractItemView::NoEditTriggers);
+//    ui->tv->setSelectionMode(QAbstractItemView::SingleSelection);
+//    ui->tv->setSelectionBehavior(QAbstractItemView::SelectRows);
+//    QSortFilterProxyModel *sqlproxy = new QSortFilterProxyModel(this);
+//    sqlproxy->setSourceModel(model);
+//    ui->tv->setModel(sqlproxy);
+    QString queryStr = ui->idEdit->text();
+    if(queryStr!="")
+    {
+        QString getData = "page="+QString::number(0)+"&type=1&query="+QString(Tool::getInstance()->getUrlEncode(queryStr));
+        qDebug()<<getData;
+        QNetworkRequest req(QUrl(Tool::urlRoot+"book/query?"+getData));
+        netManager->get(req);
+    }
+
 }
 
 void BookManageForm::on_bookEditBtn_clicked()
@@ -155,35 +182,35 @@ void BookManageForm::on_bookEditBtn_clicked()
     int row = ui->tv->currentIndex().row();
     if(row>=0){
        QString id = ui->tv->model()->data(ui->tv->model()->index(row,0)).toString();
-       QSqlQuery query(Tool::getInstance()->getDb());
-       query.exec("select * from 图书 where 图书条形码="+id);
-       query.next();
-       BookData * data = new BookData();
-       data->id = id;
-       data->name = query.value(1).toString();
-       data->type = query.value(2).toInt();
-       data->author = query.value(3).toString();
-       data->publisher = query.value(4).toString();
-       data->date = query.value(5).toDate();
-       data->price = query.value(6).toDouble();
-       data->page = query.value(7).toInt();
-       data->bookCase = query.value(8).toInt();
-       data->allNum = query.value(9).toInt();
-       data->nowNum = query.value(10).toInt();
-       BookEditDialog *bed = new BookEditDialog(1,data);
+//       QSqlQuery query(Tool::getInstance()->getDb());
+//       query.exec("select * from 图书 where 图书条形码="+id);
+//       query.next();
+//       BookData * data = new BookData();
+//       data->id = id;
+//       data->name = query.value(1).toString();
+//       data->type = query.value(2).toInt();
+//       data->author = query.value(3).toString();
+//       data->publisher = query.value(4).toString();
+//       data->date = query.value(5).toDate();
+//       data->price = query.value(6).toDouble();
+//       data->page = query.value(7).toInt();
+//       data->bookCase = query.value(8).toInt();
+//       data->allNum = query.value(9).toInt();
+//       data->nowNum = query.value(10).toInt();
+       BookEditDialog *bed = new BookEditDialog(id);
        bed->show();
        if(bed->exec()==1){
-           initBookData();
+           initBookData(1);
        }
     }
 }
 
 void BookManageForm::on_bookAddBtn_clicked()
 {
-    BookEditDialog *bed = new BookEditDialog(0);
+    BookEditDialog *bed = new BookEditDialog();
     bed->show();
     if(bed->exec()==1){
-        initBookData();
+        initBookData(1);
     }
 }
 
@@ -194,10 +221,12 @@ void BookManageForm::on_bookDelBtn_clicked()
         int ok = StyleTool::getInstance()->messageBoxQuesion("确认要删除该书？");
          if(ok==1){
              QString id = ui->tv->model()->data(ui->tv->model()->index(row,0)).toString();
-             QSqlQuery query(Tool::getInstance()->getDb());
-             query.exec("delete from 图书 where 图书条形码="+id);
-             StyleTool::getInstance()->messageBoxInfo("执行成功！");
-             initBookData();
+//             QSqlQuery query(Tool::getInstance()->getDb());
+//             query.exec("delete from 图书 where 图书条形码="+id);
+//             StyleTool::getInstance()->messageBoxInfo("执行成功！");
+//             initBookData(0);
+             QNetworkRequest req(QUrl(Tool::urlRoot+"book/delete?barcode="+id));
+             netManager->get(req);
          }
     }
 }
@@ -243,7 +272,7 @@ void BookManageForm::on_typeEditBtn_clicked()
 
 void BookManageForm::on_showBookBtn_clicked()
 {
-    initBookData();
+    initBookData(1);
 }
 
 
@@ -299,4 +328,10 @@ void BookManageForm::on_typeCancelBtn_clicked()
     ui->typeNameEdit->setText("");
     ui->borrowSumEdit->setText("");
     bookClassState = 0;
+}
+
+void BookManageForm::on_btn_page_clicked()
+{
+    int value = ui->box_page->value();
+    initBookData(value);
 }

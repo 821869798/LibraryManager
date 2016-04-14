@@ -12,3 +12,4 @@ BookSearchForm::~BookSearchForm()
 {
     delete ui;
 }
+

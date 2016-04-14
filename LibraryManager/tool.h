@@ -28,13 +28,14 @@ public:
     QByteArray getRequestData(QStringList args, QStringList data);  //获取编码后的post数据
     QString getMd5String(QString pwd);
     void initBookClassByArray(QJsonArray array);
+    QByteArray getUrlEncode(QString str);  //转换url编码
 private:
     static Tool *instance;
     QSqlDatabase db;
     QNetworkCookieJar *cookieJar;
 
     QTextCodec *codec;
-    QByteArray getUrlEncode(QString str);  //转换url编码
+
 };
 
 #endif // TOOL_H

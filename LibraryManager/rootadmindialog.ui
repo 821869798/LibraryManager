@@ -345,7 +345,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="btnBook_2">
+             <widget class="QPushButton" name="btnReader">
               <property name="minimumSize">
                <size>
                 <width>40</width>
@@ -361,7 +361,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="btnBook_3">
+             <widget class="QPushButton" name="btnSearch">
               <property name="minimumSize">
                <size>
                 <width>40</width>
@@ -369,7 +369,7 @@
                </size>
               </property>
               <property name="toolTip">
-               <string>系统查询</string>
+               <string>图书查询</string>
               </property>
               <property name="text">
                <string/>

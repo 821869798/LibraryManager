@@ -39,9 +39,12 @@ private slots:
     void on_typeCancelBtn_clicked();
 
     void finishHttp(QNetworkReply *reply);
+
+    void on_btn_page_clicked();
+
 private:
     Ui::BookManageForm *ui;
-    void initBookData();
+    void initBookData(int page);
     void initBookClass();
     int bookClassState;  //图书类别管理的编辑状态，0表示没有，1表示添加，2表示编辑
     int currentClass;
