@@ -219,12 +219,6 @@ def book_new():
                 return "true"
     return "false"
 
-#获取图书
-@app.route("/book/getsome",methods=["GET"])
-def book_getsome():
-    page = tool.strtoint(request.args.get("page"),0)
-    return json.dumps(Book.getsome(page))
-
 #获取图书完整信息
 @app.route("/book/getcomplete",methods=["GET"])
 def book_getcomplete():
@@ -305,6 +299,12 @@ def book_query():
             booklist = booklist.filter(Book.bookshelf==tool.strtoint(query_str,0))
     booklist = booklist.offset(Book.pageCount*page).limit(Book.pageCount).all()
     return json.dumps(Book.getsome(booklist))
+
+@app.route("/reader/query",methods=["GET"])
+def reader_query():
+    if tool.readermanageValid(session):
+        pass
+    return "false"
 
 @app.route("/test")
 def test():

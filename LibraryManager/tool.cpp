@@ -60,7 +60,7 @@ void Tool::tableAddData(QTableView *tv,QJsonArray array)
         QJsonArray arrayTemp = array[i].toArray();
         for(int j=0;j<arrayTemp.size();j++)
         {
-            model->setItem(i,j,new QStandardItem(arrayTemp[j].toString()));
+            model->setItem(i,j,new QStandardItem(arrayTemp[j].toVariant().toString()));
         }
     }
 }

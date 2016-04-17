@@ -2,6 +2,8 @@
 #define READERMANAGEFORM_H
 
 #include <QWidget>
+#include "tool.h"
+#include <QButtonGroup>
 
 namespace Ui {
 class ReaderManageForm;
@@ -17,6 +19,11 @@ public:
 
 private:
     Ui::ReaderManageForm *ui;
+    void init();
+    void initByData(QString tempData);
+    QNetworkAccessManager * netManager;
+    int searchType;
+    QButtonGroup *radioGroup;
 };
 
 #endif // READERMANAGEFORM_H

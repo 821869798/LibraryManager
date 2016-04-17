@@ -93,6 +93,10 @@ void RootAdminDialog::InitStyle()
         ui->btnAdmin->setIconSize(QSize(40,40));
         ui->btnBook->setIcon(QIcon(":/image/book.png"));
         ui->btnBook->setIconSize(QSize(40,40));
+        ui->btnReader->setIcon(QIcon(":/image/user.png"));
+        ui->btnReader->setIconSize(QSize(40,40));
+        ui->btnSearch->setIcon(":/image/search.png");
+        ui->btnSearch->setIconSize(QSize(40,40));
         this->setWindowIcon(QIcon(":/image/home.png"));
 
         //添加换肤菜单

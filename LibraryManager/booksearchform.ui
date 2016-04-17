@@ -21,7 +21,7 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_4">
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_10" stretch="3,2">
+    <layout class="QHBoxLayout" name="horizontalLayout_10" stretch="2,1">
      <item>
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
@@ -379,7 +379,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QComboBox" name="comboBox"/>
+             <widget class="QComboBox" name="typeBox"/>
             </item>
             <item>
              <spacer name="horizontalSpacer_7">
@@ -426,7 +426,7 @@
              </spacer>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButton_3">
+             <widget class="QPushButton" name="btn_query">
               <property name="text">
                <string>查询</string>
               </property>

@@ -13,7 +13,8 @@ def createall():
     db.create_all()
     f = open("static/默认数据.txt","r",encoding="utf-8")
     for line in f.readlines():
-        db.session.execute(line)
+        if line:
+            db.session.execute(line)
     f.close()
     db.session.commit()
 
@@ -22,8 +23,8 @@ def dropall():
     if prompt_bool("Are you sure ? You will lose all your data !"):
         db.drop_all()
 
-# if __name__ == "__main__":
-#     manager.run()
-
 if __name__ == "__main__":
-    app.run(debug=True)
+    manager.run()
+
+# if __name__ == "__main__":
+#     app.run(debug=True)
