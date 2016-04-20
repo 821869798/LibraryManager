@@ -1,6 +1,6 @@
 from models import *
 from config import app
-from flask import session
+from flask import session,redirect
 from flask import request
 from flask import make_response
 from urllib.parse import unquote
@@ -11,7 +11,7 @@ def log(sss):
     app.logger.debug(sss)
 
 #登陆
-@app.route("/login", methods=["POST"])
+@app.route("/role/login", methods=["POST"])
 def login():
     username = request.form.get("username")
     password = request.form.get("password")
@@ -26,11 +26,22 @@ def login():
             if root:
                 session["username"] = username
                 session["logintype"] = 2
-                return "true"
+                dic = {"logintype":2}
+                return json.dumps(dic)
         elif logintype is 1:
-            pass
+            adminer = Adminer.query.filter_by(username=username,password=password).first()
+            if adminer:
+                session["username"] = username
+                session["logintype"] = 1
+                dic = {"logintype":1,"book":adminer.bookmanage,"reader":adminer.readermanage}
+                return json.dumps(dic)
         elif logintype is 0:
-            pass
+            reader = Reader.query.filter_by(barcode=username,password=password).first()
+            if reader:
+                session["username"] = username
+                session["logintype"] = 0
+                dic = {"logintype":0}
+                return json.dumps(dic)
     return "false"
 
 #获取所有管理员
@@ -300,15 +311,50 @@ def book_query():
     booklist = booklist.offset(Book.pageCount*page).limit(Book.pageCount).all()
     return json.dumps(Book.getsome(booklist))
 
+@app.route("/license/getall",methods=["GET","POST"])
+def license_getall():
+    return json.dumps(License.getall())
+
+#读者查询 0->名字,1->读者条形码
 @app.route("/reader/query",methods=["GET"])
 def reader_query():
-    if tool.readermanageValid(session):
-        pass
+    #if tool.readermanageValid(session):
+    page = tool.strtoint(request.args.get("page"),0)
+    query_type = tool.strtoint(request.args.get("type"),0)
+    query_str = request.args.get("query")
+    readerlist = Reader.query
+    if query_str:
+        query_str = unquote(query_str)
+        if query_type is 0:
+            readerlist = readerlist.filter(Reader.name.ilike("%"+query_str+"%"))
+        elif query_type is 1:
+            readerlist = readerlist.filter(Reader.barcode==query_str)
+    readerlist = readerlist.offset(Reader.pageCount*page).limit(Reader.pageCount).all()
+    return json.dumps(Reader.getsome(readerlist))
+    return "false"
+
+@app.route("/role/changepwd",methods=["POST"])
+def role_changepwd():
+    logintype = session.get("logintype")
+    username = session.get("username")
+
+    if logintype and username:
+        old_pwd = request.form.get("old")
+        new_pwd = request.form.get("new")
+        logintype = tool.strtoint(logintype,-1)
+        if logintype is 2:
+            role = RootAdminer.query.filter_by(username=username).first()
+        elif logintype is 1:
+            role = Adminer.query.filter_by(username=username).first()
+        elif logintype is 0:
+            role = Reader.query.filter_by(barcode=username).first()
+        if role and role.password==old_pwd:
+            role.password = new_pwd
+            db.session.add(role)
+            db.session.commit()
+            return "true"
     return "false"
 
 @app.route("/test")
 def test():
-    abc = request.args.get("test")
-    abc = json.loads(abc)
-    app.logger.debug(abc)
-    return "abc"
+    return redirect("/book/query?page=1")

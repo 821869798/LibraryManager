@@ -2,6 +2,7 @@
 #include "ui_logindialog.h"
 #include "styletool.h"
 #include "rootadmindialog.h"
+#include "visitordialog.h"
 #include <QMenu>
 #include <QAction>
 
@@ -119,11 +120,14 @@ void LoginDialog::init()
     ui->le2->setEchoMode(QLineEdit::Password);
     ui->le4->setEchoMode(QLineEdit::Password);
 
-    mutex = true;
     netManager = new QNetworkAccessManager;
     netManager->setCookieJar(Tool::getInstance()->getCookieJar());
     connect(netManager,&QNetworkAccessManager::finished,this,&LoginDialog::finishHttp);
 
+    QNetworkRequest req(QUrl(Tool::urlRoot+"booktype/getall"));
+    netManager->get(req);
+    req.setUrl(QUrl(Tool::urlRoot+"license/getall"));
+    netManager->get(req);
 }
 
 void LoginDialog::finishHttp(QNetworkReply *reply)
@@ -131,23 +135,43 @@ void LoginDialog::finishHttp(QNetworkReply *reply)
     if(reply->error() == QNetworkReply::NoError)
     {
         QString repData = QString(reply->readAll());
-        if(repData=="true"){
-            RootAdminDialog * rad = new RootAdminDialog;
-            rad->show();
-            this->close();
+        QString path = reply->url().path();
+        if(repData!="false"){
+            if(path=="/role/login")
+            {
+                RootAdminDialog * rad = new RootAdminDialog;
+                rad->show();
+                this->close();
+            }
+            if(path=="/booktype/getall")
+            {
+                QJsonParseError json_error;
+                QJsonDocument jsonDocument = QJsonDocument::fromJson(repData.toUtf8(), &json_error);
+                if(json_error.error == QJsonParseError::NoError)
+                {
+                    Tool::getInstance()->initBookClassByArray(jsonDocument.object()["alldata"].toArray());
+                }
+            }
+            if(path=="/license/getall")
+            {
+                QJsonParseError json_error;
+                QJsonDocument jsonDocument = QJsonDocument::fromJson(repData.toUtf8(), &json_error);
+                if(json_error.error == QJsonParseError::NoError)
+                {
+                    Tool::getInstance()->initLicenseByArray(jsonDocument.array());
+                }
+            }
+
         }else{
              StyleTool::getInstance()->messageBoxError("账号或密码错误！");
         }
     }else{
         StyleTool::getInstance()->netError();
     }
-    mutex = true;
 }
 
 void LoginDialog::on_adminLoginBtn_clicked() //管理员登陆
 {
-    if(!mutex)
-        return;
     QString id = ui->le3->text().trimmed();
     QString pwd = ui->le4->text().trimmed();
     if(id=="" || pwd=="")  //账号或密码为空
@@ -159,9 +183,7 @@ void LoginDialog::on_adminLoginBtn_clicked() //管理员登陆
     QByteArray postData = Tool::getInstance()->getRequestData(QStringList()<<"username"<<"password"<<"logintype",
                                                   QStringList()<<id<<pwd<<QString::number(2));
 
-    QNetworkRequest req(QUrl(Tool::urlRoot+"login"));
-    mutex = false;
-    loginType = 2;
+    QNetworkRequest req(QUrl(Tool::urlRoot+"role/login"));
     netManager->post(req,postData);
 
 
@@ -199,4 +221,11 @@ void LoginDialog::on_adminLoginBtn_clicked() //管理员登陆
 //        ui->le3->setText("");
 //        ui->le4->setText("");
 //    }
+}
+
+void LoginDialog::on_visitorBtn_clicked()
+{
+    VisitorDialog *vistor = new VisitorDialog;
+    vistor->show();
+    this->close();
 }

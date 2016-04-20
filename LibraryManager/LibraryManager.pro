@@ -25,7 +25,12 @@ SOURCES += main.cpp \
     readermanageform.cpp \
     bookeditdialog.cpp \
     booksearchform.cpp \
-    bookinfoform.cpp
+    bookinfoform.cpp \
+    settingform.cpp \
+    formswitch.cpp \
+    readereditdialog.cpp \
+    adminerdialog.cpp \
+    visitordialog.cpp
 
 HEADERS  += \
     logindialog.h \
@@ -41,7 +46,12 @@ HEADERS  += \
     readermanageform.h \
     bookeditdialog.h \
     booksearchform.h \
-    bookinfoform.h
+    bookinfoform.h \
+    settingform.h \
+    formswitch.h \
+    readereditdialog.h \
+    adminerdialog.h \
+    visitordialog.h
 
 FORMS    += \
     logindialog.ui \
@@ -54,7 +64,11 @@ FORMS    += \
     readermanageform.ui \
     bookeditdialog.ui \
     booksearchform.ui \
-    bookinfoform.ui
+    bookinfoform.ui \
+    settingform.ui \
+    readereditdialog.ui \
+    adminerdialog.ui \
+    visitordialog.ui
 
 RESOURCES += \
     rc.qrc

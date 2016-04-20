@@ -41,8 +41,10 @@ void BookSearchForm::init()
     model->setHorizontalHeaderLabels(list);
     ui->tv->setModel(model);
 
-    QString tempData = "page=0";
-    initByData(tempData);
+//    QNetworkRequest req(QUrl(Tool::urlRoot+"book/query?page=0"));
+//    netManager->get(req);
+//    QString tempData = "page=0";
+//    initByData(tempData);
 }
 
 void BookSearchForm::initByData(QString tempData)
@@ -92,6 +94,11 @@ void BookSearchForm::show()
         sl.append(it.key());
     }
     ui->typeBox->addItems(sl);
+    searchType = 0;
+    ui->label_title->setText("全部图书");
+    QString tempData = "page=0";
+    initByData(tempData);
+    qDebug()<<"haha";
 }
 
 void BookSearchForm::on_btn_jump_clicked()
@@ -106,7 +113,6 @@ void BookSearchForm::on_btn_jump_clicked()
     {
         tempData = "page="+QString::number(value);
     }
-    qDebug()<<tempData;
     initByData(tempData);
 }
 

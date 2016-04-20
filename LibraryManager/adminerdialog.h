@@ -1,10 +1,9 @@
-#ifndef ROOTADMINDIALOG_H
-#define ROOTADMINDIALOG_H
+#ifndef ADMINERDIALOG_H
+#define ADMINERDIALOG_H
 
 #include <QDialog>
 #include <QMouseEvent>
 #include <QDesktopWidget>
-#include "adminmanageform.h"
 #include "bookmanageform.h"
 #include "readermanageform.h"
 #include "booksearchform.h"
@@ -12,17 +11,19 @@
 #include "formswitch.h"
 
 namespace Ui {
-class RootAdminDialog;
+class AdminerDialog;
 }
 
-class RootAdminDialog : public QDialog
+class AdminerDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit RootAdminDialog(QWidget *parent = 0);
-    ~RootAdminDialog();
+    explicit AdminerDialog(bool book = false,bool reader = false,QWidget *parent = 0);
+    ~AdminerDialog();
 
+private:
+    Ui::AdminerDialog *ui;
 protected:
     bool eventFilter(QObject *obj, QEvent *event);
     void mouseMoveEvent(QMouseEvent *e);
@@ -37,7 +38,6 @@ private slots:
     void on_btnMenu_Min_clicked();
 
     void changeSkin();
-    void on_btnAdmin_clicked();
 
     void on_btnBook_clicked();
 
@@ -56,8 +56,7 @@ private:
     void InitStyle();
 
 private:
-    Ui::RootAdminDialog *ui;
-    void init();
+    void init(bool book,bool reader);
 //    AdminManageForm *amf;
 //    BookManageForm *bmf;
 //    ReaderManageForm *rmf;
@@ -66,4 +65,4 @@ private:
     FormSwitch *fs;
 };
 
-#endif // ROOTADMINDIALOG_H
+#endif // ADMINERDIALOG_H

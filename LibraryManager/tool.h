@@ -17,9 +17,9 @@ public:
     static Tool * getInstance();
     static void setInstace(Tool *value);
     QSqlDatabase getDb() const;
-    void initMapData();
+//    void initMapData();
     QMap<QString,BookClassData> bookClass;
-    QMap<QString,int> identification;
+    QMap<QString,int> licenseMap;
     QNetworkCookieJar *getCookieJar();
     static QString urlRoot;
 
@@ -29,6 +29,8 @@ public:
     QString getMd5String(QString pwd);
     void initBookClassByArray(QJsonArray array);
     QByteArray getUrlEncode(QString str);  //转换url编码
+    void initLicenseByArray(QJsonArray array);
+    QString findLicenseById(int id);
 private:
     static Tool *instance;
     QSqlDatabase db;

@@ -73,7 +73,7 @@ class Book(db.Model):
     historys = db.relationship("History", backref="book", lazy="dynamic")
     # losebooks = db.relationship("LoseBook", backref="book", lazy="dynamic")
 
-    pageCount = 10;
+    pageCount = 10
 
     def toArrayData(self):
         arr = [self.barcode, self.name,self.author,self.booktype.name,self.allcount,self.allcount-self.borrows.count()]
@@ -99,6 +99,17 @@ class License(db.Model):
     name = db.Column(db.String(64), nullable=False,unique=True)
     readers = db.relationship("Reader", backref="license", lazy="dynamic")
 
+    def toArrayData(self):
+        arr = [self.id,self.name]
+        return arr
+
+    @staticmethod
+    def getall():
+        datalist = License.query.all()
+        for i in range(len(datalist)):
+            datalist[i] = datalist[i].toArrayData()
+        return datalist
+
 # 读者信息
 
 
@@ -120,6 +131,19 @@ class Reader(db.Model):
     borrows = db.relationship("Borrow", backref="reader", lazy="dynamic")
     historys = db.relationship("History", backref="reader", lazy="dynamic")
     # losebooks = db.relationship("LoseBook", backref="reader", lazy="dynamic")
+    pageCount = 10
+
+    def toArrayData(self):
+        arr = [self.barcode,self.name,self.sex,self.rtype,str(self.date),\
+        self.license.name,self.licensenum,self.phone,self.email,self.avaliable,self.note,float(self.arrears)]
+        return arr
+
+    @staticmethod
+    def getsome(datalist):
+        for i in range(len(datalist)):
+            datalist[i] = datalist[i].toArrayData()
+        return datalist
+
 
 # 借阅信息
 
@@ -142,7 +166,7 @@ class History(db.Model):
     bdate = db.Column(db.Date, nullable=False)
     rdate = db.Column(db.Date, nullable=False, default=date.today())
     overdue = db.Column(db.Integer, nullable=False, default=0)
-
+    pageCount = 10
 # 遗失图书
 
 

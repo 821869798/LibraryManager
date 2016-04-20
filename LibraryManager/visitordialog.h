@@ -1,28 +1,27 @@
-#ifndef ROOTADMINDIALOG_H
-#define ROOTADMINDIALOG_H
+#ifndef VISITORDIALOG_H
+#define VISITORDIALOG_H
 
 #include <QDialog>
 #include <QMouseEvent>
 #include <QDesktopWidget>
-#include "adminmanageform.h"
-#include "bookmanageform.h"
-#include "readermanageform.h"
 #include "booksearchform.h"
-#include "settingform.h"
 #include "formswitch.h"
 
+
 namespace Ui {
-class RootAdminDialog;
+class VisitorDialog;
 }
 
-class RootAdminDialog : public QDialog
+class VisitorDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit RootAdminDialog(QWidget *parent = 0);
-    ~RootAdminDialog();
+    explicit VisitorDialog(QWidget *parent = 0);
+    ~VisitorDialog();
 
+private:
+    Ui::VisitorDialog *ui;
 protected:
     bool eventFilter(QObject *obj, QEvent *event);
     void mouseMoveEvent(QMouseEvent *e);
@@ -37,16 +36,10 @@ private slots:
     void on_btnMenu_Min_clicked();
 
     void changeSkin();
-    void on_btnAdmin_clicked();
-
-    void on_btnBook_clicked();
-
-    void on_btnReader_clicked();
 
     void on_btnSearch_clicked();
 
 
-    void on_btnSetting_clicked();
 
 private:
     QPoint mousePoint;
@@ -56,14 +49,8 @@ private:
     void InitStyle();
 
 private:
-    Ui::RootAdminDialog *ui;
     void init();
-//    AdminManageForm *amf;
-//    BookManageForm *bmf;
-//    ReaderManageForm *rmf;
-//    BookSearchForm *bsf;
-//    SettingForm *setf;
     FormSwitch *fs;
 };
 
-#endif // ROOTADMINDIALOG_H
+#endif // VISITORDIALOG_H

@@ -1,24 +1,24 @@
-#include "rootadmindialog.h"
-#include "ui_rootadmindialog.h"
+#include "adminerdialog.h"
+#include "ui_adminerdialog.h"
 #include "styletool.h"
 #include <QMenu>
 #include <QAction>
 
-RootAdminDialog::RootAdminDialog(QWidget *parent) :
+AdminerDialog::AdminerDialog(bool book,bool reader,QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::RootAdminDialog)
+    ui(new Ui::AdminerDialog)
 {
     ui->setupUi(this);
     InitStyle();
-    init();
+    init(book,reader);
 }
 
-RootAdminDialog::~RootAdminDialog()
+AdminerDialog::~AdminerDialog()
 {
     delete ui;
 }
 
-bool RootAdminDialog::eventFilter(QObject *obj, QEvent *event)
+bool AdminerDialog::eventFilter(QObject *obj, QEvent *event)
 {
     if (event->type() == QEvent::MouseButtonDblClick) {
         this->on_btnMenu_Max_clicked();
@@ -27,7 +27,7 @@ bool RootAdminDialog::eventFilter(QObject *obj, QEvent *event)
     return QObject::eventFilter(obj, event);
 }
 
-void RootAdminDialog::mouseMoveEvent(QMouseEvent *e)
+void AdminerDialog::mouseMoveEvent(QMouseEvent *e)
 {
     if (mousePressed && (e->buttons() && Qt::LeftButton) && !max) {
         this->move(e->globalPos() - mousePoint);
@@ -35,7 +35,7 @@ void RootAdminDialog::mouseMoveEvent(QMouseEvent *e)
     }
 }
 
-void RootAdminDialog::mousePressEvent(QMouseEvent *e)
+void AdminerDialog::mousePressEvent(QMouseEvent *e)
 {
     if (e->button() == Qt::LeftButton) {
         mousePressed = true;
@@ -44,17 +44,17 @@ void RootAdminDialog::mousePressEvent(QMouseEvent *e)
     }
 }
 
-void RootAdminDialog::mouseReleaseEvent(QMouseEvent *)
+void AdminerDialog::mouseReleaseEvent(QMouseEvent *)
 {
     mousePressed = false;
 }
 
-void RootAdminDialog::on_btnMenu_Close_clicked()
+void AdminerDialog::on_btnMenu_Close_clicked()
 {
     qApp->quit();
 }
 
-void RootAdminDialog::on_btnMenu_Max_clicked()
+void AdminerDialog::on_btnMenu_Max_clicked()
 {
     if (max) {
         this->setGeometry(location);
@@ -69,12 +69,12 @@ void RootAdminDialog::on_btnMenu_Max_clicked()
     max = !max;
 }
 
-void RootAdminDialog::on_btnMenu_Min_clicked()
+void AdminerDialog::on_btnMenu_Min_clicked()
 {
     this->showMinimized();
 }
 
-void RootAdminDialog::InitStyle()
+void AdminerDialog::InitStyle()
 {
         this->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowSystemMenuHint | Qt::WindowMinMaxButtonsHint);
         location = this->geometry();
@@ -89,8 +89,6 @@ void RootAdminDialog::InitStyle()
         ui->btn_Icon->setIcon(QIcon(":/image/home.png"));
         ui->btnMenu->setIcon(QIcon(":/image/skin.png"));
 
-        ui->btnAdmin->setIcon(QIcon(":/image/admin.png"));
-        ui->btnAdmin->setIconSize(QSize(40,40));
         ui->btnBook->setIcon(QIcon(":/image/book.png"));
         ui->btnBook->setIconSize(QSize(40,40));
         ui->btnReader->setIcon(QIcon(":/image/user.png"));
@@ -117,13 +115,13 @@ void RootAdminDialog::InitStyle()
         skin6->setProperty("tag",5);
         QAction *skin7 = new QAction(QIcon(":/image/silvery.png"),"silvery  ",NULL);
         skin7->setProperty("tag",6);
-        connect(skin1,&QAction::triggered,this,&RootAdminDialog::changeSkin); //按钮事件
-        connect(skin2,&QAction::triggered,this,&RootAdminDialog::changeSkin);
-        connect(skin3,&QAction::triggered,this,&RootAdminDialog::changeSkin);
-        connect(skin4,&QAction::triggered,this,&RootAdminDialog::changeSkin);
-        connect(skin5,&QAction::triggered,this,&RootAdminDialog::changeSkin);
-        connect(skin6,&QAction::triggered,this,&RootAdminDialog::changeSkin);
-        connect(skin7,&QAction::triggered,this,&RootAdminDialog::changeSkin);
+        connect(skin1,&QAction::triggered,this,&AdminerDialog::changeSkin); //按钮事件
+        connect(skin2,&QAction::triggered,this,&AdminerDialog::changeSkin);
+        connect(skin3,&QAction::triggered,this,&AdminerDialog::changeSkin);
+        connect(skin4,&QAction::triggered,this,&AdminerDialog::changeSkin);
+        connect(skin5,&QAction::triggered,this,&AdminerDialog::changeSkin);
+        connect(skin6,&QAction::triggered,this,&AdminerDialog::changeSkin);
+        connect(skin7,&QAction::triggered,this,&AdminerDialog::changeSkin);
         skinMenu->addAction(skin1);
         skinMenu->addAction(skin2);
         skinMenu->addAction(skin3);
@@ -136,79 +134,63 @@ void RootAdminDialog::InitStyle()
 }
 
 
-void RootAdminDialog::init()
+void AdminerDialog::init(bool book,bool reader)
 {
-    AdminManageForm *amf = new AdminManageForm();
-    BookManageForm *bmf = new BookManageForm();
-    ReaderManageForm *rmf = new ReaderManageForm();
-    BookSearchForm *bsf = new BookSearchForm();
-    SettingForm *setf = new SettingForm();
-    ui->h1->addWidget(amf);
-    ui->h1->addWidget(bmf);
-    ui->h1->addWidget(rmf);
-    ui->h1->addWidget(bsf);
-    ui->h1->addWidget(setf);
     fs = new FormSwitch;
-    fs->addWidget(amf,0);
-    fs->addWidget(bmf,1);
-    fs->addWidget(rmf,2);
+    ui->btnBook->hide();
+    ui->btnReader->hide();
+    if(book)
+    {
+        BookManageForm *bmf = new BookManageForm();
+        ui->h1->addWidget(bmf);
+        fs->addWidget(bmf,1);
+        ui->btnBook->show();
+    }
+    if(reader)
+    {
+        ReaderManageForm *rmf = new ReaderManageForm();
+        ui->h1->addWidget(rmf);
+        fs->addWidget(rmf,2);
+        ui->btnReader->show();
+    }
+    BookSearchForm *bsf = new BookSearchForm();
+    ui->h1->addWidget(bsf);
     fs->addWidget(bsf,3);
+    SettingForm *setf = new SettingForm();
+    ui->h1->addWidget(setf);
     fs->addWidget(setf,4);
     fs->hideAll();
-    fs->showWidget(0);
-//    bmf->hide();
-//    rmf->hide();
-//    bsf->hide();
+    int i=1;
+    while(i++<3&&!fs->showWidget(i)); //显示第一个可以显示的窗口
 }
 
-void RootAdminDialog::changeSkin()
+void AdminerDialog::changeSkin()
 {
     int type = sender()->property("tag").toInt(0);
     StyleTool::getInstance()->SetStyle((StyleTool::AppStyle)type);
 }
 
-void RootAdminDialog::on_btnAdmin_clicked()
-{
-//    bmf->hide();
-//    bsf->hide();
-//    rmf->hide();
-//    amf->show();
-    fs->hideAll();
-    fs->showWidget(0);
-}
 
-void RootAdminDialog::on_btnBook_clicked()
+void AdminerDialog::on_btnBook_clicked()
 {
-//    amf->hide();
-//    bsf->hide();
-//    rmf->hide();
-//    bmf->show();
     fs->hideAll();
     fs->showWidget(1);
 }
 
-void RootAdminDialog::on_btnReader_clicked()
+void AdminerDialog::on_btnReader_clicked()
 {
-//    amf->hide();
-//    bsf->hide();
-//    rmf->show();
-//    bmf->hide();
     fs->hideAll();
     fs->showWidget(2);
 }
 
-void RootAdminDialog::on_btnSearch_clicked()
+void AdminerDialog::on_btnSearch_clicked()
 {
-    //    amf->hide();
-    //    bsf->show();
-    //    rmf->hide();
-    //    bmf->hide();
     fs->hideAll();
     BookSearchForm *bsf = (BookSearchForm*)fs->getWidget(3);
     bsf->show();
 }
 
-void RootAdminDialog::on_btnSetting_clicked()
+void AdminerDialog::on_btnSetting_clicked()
 {
     fs->hideAll();
     fs->showWidget(4);

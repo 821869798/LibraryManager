@@ -23,8 +23,8 @@ def dropall():
     if prompt_bool("Are you sure ? You will lose all your data !"):
         db.drop_all()
 
-if __name__ == "__main__":
-    manager.run()
-
 # if __name__ == "__main__":
-#     app.run(debug=True)
+#     manager.run()
+
+if __name__ == "__main__":
+    app.run(debug=True)

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>RootAdminDialog</class>
- <widget class="QDialog" name="RootAdminDialog">
+ <class>VisitorDialog</class>
+ <widget class="QDialog" name="VisitorDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -95,7 +95,7 @@
          <string notr="true">font: 10pt &quot;微软雅黑&quot;;</string>
         </property>
         <property name="text">
-         <string>系统管理员窗口</string>
+         <string>游客窗口</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -307,77 +307,7 @@
              <number>15</number>
             </property>
             <item>
-             <widget class="QPushButton" name="btnAdmin">
-              <property name="minimumSize">
-               <size>
-                <width>40</width>
-                <height>40</height>
-               </size>
-              </property>
-              <property name="font">
-               <font>
-                <family>微软雅黑</family>
-                <pointsize>20</pointsize>
-               </font>
-              </property>
-              <property name="toolTip">
-               <string>管理员权限管理</string>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="btnBook">
-              <property name="minimumSize">
-               <size>
-                <width>40</width>
-                <height>40</height>
-               </size>
-              </property>
-              <property name="toolTip">
-               <string>图书以及类型管理</string>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="btnReader">
-              <property name="minimumSize">
-               <size>
-                <width>40</width>
-                <height>40</height>
-               </size>
-              </property>
-              <property name="toolTip">
-               <string>读者管理</string>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
-            </item>
-            <item>
              <widget class="QPushButton" name="btnSearch">
-              <property name="minimumSize">
-               <size>
-                <width>40</width>
-                <height>40</height>
-               </size>
-              </property>
-              <property name="toolTip">
-               <string>图书查询</string>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="btnSetting">
               <property name="minimumSize">
                <size>
                 <width>40</width>

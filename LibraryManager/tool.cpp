@@ -28,24 +28,24 @@ QSqlDatabase Tool::getDb() const
     return db;
 }
 
-void Tool::initMapData()
-{
-    bookClass.clear();
-    identification.clear();
-    QSqlQuery query(db);
-    query.exec("select * from 有效证件");
-    while (query.next()) {
-        identification.insert(query.value(1).toString(),query.value(0).toInt());
-    }
-    query.exec("select * from 图书类型");
-    while(query.next()){
-        BookClassData bc;
-        bc.id = query.value(0).toInt();
-        bc.name = query.value(1).toString();
-        bc.time = query.value(2).toInt();
-        bookClass.insert(bc.name,bc);
-    }
-}
+//void Tool::initMapData()
+//{
+//    bookClass.clear();
+//    identification.clear();
+//    QSqlQuery query(db);
+//    query.exec("select * from 有效证件");
+//    while (query.next()) {
+//        identification.insert(query.value(1).toString(),query.value(0).toInt());
+//    }
+//    query.exec("select * from 图书类型");
+//    while(query.next()){
+//        BookClassData bc;
+//        bc.id = query.value(0).toInt();
+//        bc.name = query.value(1).toString();
+//        bc.time = query.value(2).toInt();
+//        bookClass.insert(bc.name,bc);
+//    }
+//}
 
 QNetworkCookieJar *Tool::getCookieJar()
 {
@@ -104,4 +104,25 @@ void Tool::initBookClassByArray(QJsonArray array)
         bc.time = temp[2].toInt();
         bookClass.insert(bc.name,bc);
     }
+}
+
+void Tool::initLicenseByArray(QJsonArray array)
+{
+    for(int i=0;i<array.size();i++)
+    {
+        QJsonArray temp = array[i].toArray();
+        licenseMap.insert(temp[1].toString(),temp[0].toInt());
+    }
+}
+
+QString Tool::findLicenseById(int id)
+{
+    QMapIterator<QString, int> i(licenseMap);
+    while (i.hasNext()) {
+        i.next();
+        if(i.value()==id){
+            return i.key();
+        }
+    }
+    return "";
 }
