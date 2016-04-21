@@ -127,8 +127,11 @@ void BookEditDialog::changeSkin()
     StyleTool::getInstance()->SetStyle((StyleTool::AppStyle)type);
 }
 
-void BookEditDialog::init(){
+void BookEditDialog::init()
+{
 
+    ui->lab_Title->setText("添加图书窗口");
+    this->setWindowTitle("添加图书窗口");
     ui->addBTn->setIcon(QIcon(":/image/add.png"));
     ui->delBtn->setIcon(QIcon(":/image/min.png"));
     ui->numLabel->setAlignment(Qt::AlignCenter);

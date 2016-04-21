@@ -1,6 +1,7 @@
 #include "readermanageform.h"
 #include "ui_readermanageform.h"
 #include "styletool.h"
+#include "readereditdialog.h"
 
 ReaderManageForm::ReaderManageForm(QWidget *parent) :
     QWidget(parent),
@@ -156,4 +157,16 @@ void ReaderManageForm::on_btn_showall_clicked()
     QString tempData = "page=0";
     ui->spinBox->setValue(1);
     initByData(tempData);
+}
+
+void ReaderManageForm::on_btn_new_clicked()
+{
+    ReaderEditDialog *red = new ReaderEditDialog;
+    red->show();
+    if(red->exec()==1)
+    {
+        ui->label_title->setText("全部读者");
+        QString tempData = "page=0";
+        initByData(tempData);
+    }
 }

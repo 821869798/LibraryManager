@@ -15,7 +15,7 @@ class ReaderEditDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit ReaderEditDialog(QWidget *parent = 0);
+    explicit ReaderEditDialog(QString currentId = "",QWidget *parent = 0);
     ~ReaderEditDialog();
 
 private:
@@ -43,6 +43,9 @@ private:
     QRect location;
     void InitStyle();
     void init();
+
+    QString currentId;
+    QNetworkAccessManager * netManager;
 };
 
 #endif // READEREDITDIALOG_H

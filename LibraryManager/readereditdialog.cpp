@@ -5,11 +5,17 @@
 #include <QMenu>
 #include <QAction>
 
-ReaderEditDialog::ReaderEditDialog(QWidget *parent) :
+ReaderEditDialog::ReaderEditDialog(QString currentId,QWidget *parent) :
     QDialog(parent),
     ui(new Ui::ReaderEditDialog)
 {
     ui->setupUi(this);
+    netManager = new QNetworkAccessManager;
+    netManager->setCookieJar(Tool::getInstance()->getCookieJar());
+    connect(netManager,&QNetworkAccessManager::finished,this,&ReaderEditDialog::finishHttp);
+    this->currentId = currentId;
+    this->InitStyle();
+    this->init();
 }
 
 ReaderEditDialog::~ReaderEditDialog()
@@ -19,7 +25,29 @@ ReaderEditDialog::~ReaderEditDialog()
 
 void ReaderEditDialog::init()
 {
-
+    ui->lab_Title->setText("添加读者窗口");
+    this->setWindowTitle("添加读者窗口");
+    QStringList sl;
+    QMap<QString,int>::const_iterator it;
+    QString tempText;
+    for(it=Tool::getInstance()->licenseMap.begin();it!=Tool::getInstance()->licenseMap.end();it++)
+    {
+        sl.append(it.key());
+        if(it.value()==0)
+        {
+            tempText = it.key();
+        }
+    }
+    ui->box_license->addItems(sl);
+    ui->box_license->setCurrentText(tempText);
+    if(currentId!="")
+    {
+        ui->lab_Title->setText("编辑读者窗口");
+        this->setWindowTitle("编辑读者窗口");
+        ui->btnOk->setText("修改");
+        QNetworkRequest req(QUrl(Tool::urlRoot+"reader/getone?barcode="+currentId));
+        netManager->get(req);
+    }
 }
 
 void ReaderEditDialog::mouseMoveEvent(QMouseEvent *e)
@@ -128,5 +156,29 @@ void ReaderEditDialog::changeSkin()
 
 void ReaderEditDialog::finishHttp(QNetworkReply *reply)
 {
+    if(reply->error() == QNetworkReply::NoError)
+    {
+        QString repData = QString(reply->readAll());
+        QString path = reply->url().path();
+        if(repData!="false")
+        {
+            if(path=="/reader/getone")
+            {
+                QJsonParseError json_error;
+                QJsonDocument jsonDocument = QJsonDocument::fromJson(repData.toUtf8(), &json_error);
+                if(json_error.error == QJsonParseError::NoError)
+                {
 
+                }
+            }
+
+        }
+        else
+        {
+            StyleTool::getInstance()->messageBoxError("操作失败!");
+        }
+    }
+    else{
+        StyleTool::getInstance()->netError();
+    }
 }

@@ -26,6 +26,8 @@ private slots:
 
     void on_btn_showall_clicked();
 
+    void on_btn_new_clicked();
+
 private:
     Ui::ReaderManageForm *ui;
     QString getData;

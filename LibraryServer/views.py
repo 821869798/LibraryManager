@@ -318,20 +318,34 @@ def license_getall():
 #读者查询 0->名字,1->读者条形码
 @app.route("/reader/query",methods=["GET"])
 def reader_query():
-    #if tool.readermanageValid(session):
-    page = tool.strtoint(request.args.get("page"),0)
-    query_type = tool.strtoint(request.args.get("type"),0)
-    query_str = request.args.get("query")
-    readerlist = Reader.query
-    if query_str:
-        query_str = unquote(query_str)
-        if query_type is 0:
-            readerlist = readerlist.filter(Reader.name.ilike("%"+query_str+"%"))
-        elif query_type is 1:
-            readerlist = readerlist.filter(Reader.barcode==query_str)
-    readerlist = readerlist.offset(Reader.pageCount*page).limit(Reader.pageCount).all()
-    return json.dumps(Reader.getsome(readerlist))
+    if tool.readermanageValid(session):
+        page = tool.strtoint(request.args.get("page"),0)
+        query_type = tool.strtoint(request.args.get("type"),0)
+        query_str = request.args.get("query")
+        readerlist = Reader.query
+        if query_str:
+            query_str = unquote(query_str)
+            if query_type is 0:
+                readerlist = readerlist.filter(Reader.name.ilike("%"+query_str+"%"))
+            elif query_type is 1:
+                readerlist = readerlist.filter(Reader.barcode==query_str)
+        readerlist = readerlist.offset(Reader.pageCount*page).limit(Reader.pageCount).all()
+        return json.dumps(Reader.getsome(readerlist))
     return "false"
+
+@app.route("/reader/getone",methods=["GET"])
+def reader_getone():
+    if tool.readermanageValid(session):
+        barcode = request.args.get("barcode")
+        if barcode:
+            reader = Reader.query.filter_by(barcode).first()
+            if reader:
+                return json.dumps(reader.toSomeData()) 
+    return "false"
+
+@app.route("/reader/change",methods=["POST"])
+def reader_change():
+    return "false";
 
 @app.route("/role/changepwd",methods=["POST"])
 def role_changepwd():
@@ -358,3 +372,14 @@ def role_changepwd():
 @app.route("/test")
 def test():
     return redirect("/book/query?page=1")
+
+@app.route("/test1",methods=["GET"])
+def test1():
+    arg1 = request.args.get("a")
+    arg2 = request.args.get("b")
+    
+    if arg1 is not None and arg2 is not None:
+        log("arg1:"+arg1)
+        log("arg2:"+arg2)
+        
+    return "false"
