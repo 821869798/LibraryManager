@@ -260,7 +260,8 @@ void BookEditDialog::on_btnOk_clicked()  //提交按钮
     array.append(page);
     array.append(bookCase);
     array.append(num);
-    if(currentId!=""){
+    if(currentId!="")
+    {
         array.append(currentId);
     }
     QJsonDocument document;

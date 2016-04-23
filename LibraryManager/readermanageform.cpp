@@ -16,6 +16,17 @@ ReaderManageForm::~ReaderManageForm()
     delete ui;
 }
 
+void ReaderManageForm::show()
+{
+    QWidget::show();
+    if(firstShow)
+    {
+        firstShow = false;
+        QString tempData = "page=0";
+        initByData(tempData);
+    }
+}
+
 void ReaderManageForm::init()
 {
     ui->btn_new->setIcon(QIcon(":/image/add.png"));
@@ -24,6 +35,7 @@ void ReaderManageForm::init()
     ui->lineEdit->setMaxLength(20);
 
     searchType = 0;
+    firstShow = true;
     ui->label_title->setStyleSheet("color:#ff0000");
     netManager = new QNetworkAccessManager;
     netManager->setCookieJar(Tool::getInstance()->getCookieJar());
@@ -45,9 +57,6 @@ void ReaderManageForm::init()
     model->setHorizontalHeaderLabels(list);
     ui->tv->setModel(model);
 
-
-    QString tempData = "page=0";
-    initByData(tempData);
 }
 
 
@@ -153,6 +162,7 @@ void ReaderManageForm::on_btn_query_clicked()
 void ReaderManageForm::on_btn_showall_clicked()
 {
     searchType = 0;
+    ui->lineEdit->setText("");
     ui->label_title->setText("全部读者");
     QString tempData = "page=0";
     ui->spinBox->setValue(1);
@@ -165,8 +175,27 @@ void ReaderManageForm::on_btn_new_clicked()
     red->show();
     if(red->exec()==1)
     {
+        ui->lineEdit->setText("");
         ui->label_title->setText("全部读者");
         QString tempData = "page=0";
+        ui->spinBox->setValue(1);
         initByData(tempData);
+    }
+}
+
+void ReaderManageForm::on_btn_edit_clicked()
+{
+    int row = ui->tv->currentIndex().row();
+    if(row>=0){
+       QString id = ui->tv->model()->data(ui->tv->model()->index(row,0)).toString();
+       ReaderEditDialog *red = new ReaderEditDialog(id);
+       red->show();
+       if(red->exec()==1){
+           ui->lineEdit->setText("");
+           ui->label_title->setText("全部读者");
+           QString tempData = "page=0";
+           ui->spinBox->setValue(1);
+           initByData(tempData);
+       }
     }
 }

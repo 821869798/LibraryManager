@@ -17,6 +17,7 @@ public:
     ~BookManageForm();
 
     void init();
+    void show();
 private slots:
     void on_seartBtn_clicked();
 
@@ -53,6 +54,7 @@ private:
     int httpType;
     QNetworkAccessManager * netManager;
     void initBookClassByArray();
+    bool firstShow;
 };
 
 #endif // BOOKMANAGEFORM_H

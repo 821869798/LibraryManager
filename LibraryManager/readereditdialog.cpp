@@ -168,10 +168,25 @@ void ReaderEditDialog::finishHttp(QNetworkReply *reply)
                 QJsonDocument jsonDocument = QJsonDocument::fromJson(repData.toUtf8(), &json_error);
                 if(json_error.error == QJsonParseError::NoError)
                 {
-
+                    QJsonArray array = jsonDocument.array();
+                    ui->le_barcode->setText(array[0].toString());
+                    ui->le_name->setText(array[1].toString());
+                    ui->box_sex->setCurrentText(array[2].toString());
+                    ui->box_rtype->setCurrentIndex(array[3].toInt());
+                    ui->dateEdit->setDate(QDate::fromString(array[4].toString(),"yyyy-MM-dd"));
+                    ui->box_license->setCurrentText(array[5].toString());
+                    ui->le_license->setText(array[6].toString());
+                    ui->le_phone->setText(array[7].toString());
+                    ui->le_email->setText(array[8].toString());
+                    ui->le_note->setText(array[9].toString());
                 }
             }
-
+            if(path=="/reader/new"||path=="/reader/change")
+            {
+                StyleTool::getInstance()->messageBoxInfo("执行成功！");
+                this->close();
+                done(1);
+            }
         }
         else
         {
@@ -181,4 +196,52 @@ void ReaderEditDialog::finishHttp(QNetworkReply *reply)
     else{
         StyleTool::getInstance()->netError();
     }
+}
+
+void ReaderEditDialog::on_btnOk_clicked()
+{
+    QString barcode = ui->le_barcode->text();
+    QString name = ui->le_name->text();
+    QString sex = ui->box_sex->currentText();
+    int rtype = ui->box_rtype->currentIndex();
+    QString date = ui->dateEdit->date().toString("yyyy-MM-dd");
+    int license_id = Tool::getInstance()->licenseMap[ui->box_license->currentText()];
+    QString license_num = ui->le_license->text();
+    QString phone = ui->le_license->text();
+    QString email = ui->le_email->text();
+    QString note = ui->le_note->text();
+    if(barcode==""||name==""||license_num==""||phone=="")
+    {
+        StyleTool::getInstance()->messageBoxError("输入信息不完整！");
+    }
+    QJsonArray array;
+    array.append(barcode);
+    array.append(name);
+    array.append(sex);
+    array.append(rtype);
+    array.append(date);
+    array.append(license_id);
+    array.append(license_num);
+    array.append(phone);
+    array.append(email);
+    array.append(note);
+    if(currentId!="")
+        array.append(currentId);
+    QJsonDocument document;
+    document.setArray(array);
+    QString json_str(document.toJson());
+    QByteArray postData =  Tool::getInstance()->getRequestData(
+                QStringList()<<"data",QStringList()<<json_str);
+    QNetworkRequest req;
+    if(currentId=="")
+        req.setUrl(QUrl(Tool::urlRoot+"reader/new"));
+    else
+        req.setUrl(QUrl(Tool::urlRoot+"reader/change"));
+    netManager->post(req,postData);
+
+}
+
+void ReaderEditDialog::on_btnCancel_clicked()
+{
+    this->close();
 }

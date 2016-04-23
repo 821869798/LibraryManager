@@ -204,8 +204,9 @@ void RootAdminDialog::on_btnSearch_clicked()
     //    rmf->hide();
     //    bmf->hide();
     fs->hideAll();
-    BookSearchForm *bsf = (BookSearchForm*)fs->getWidget(3);
-    bsf->show();
+    fs->showWidget(3);
+//    BookSearchForm *bsf = (BookSearchForm*)fs->getWidget(3);
+//    bsf->show();
 }
 
 void RootAdminDialog::on_btnSetting_clicked()

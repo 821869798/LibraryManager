@@ -3,6 +3,11 @@
 
 #include <QWidget>
 #include <QMap>
+#include "adminmanageform.h"
+#include "bookmanageform.h"
+#include "readermanageform.h"
+#include "booksearchform.h"
+#include "settingform.h"
 class FormSwitch
 {
 public:

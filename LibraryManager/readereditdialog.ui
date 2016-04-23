@@ -319,7 +319,7 @@
       </spacer>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="1,2">
+      <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="1,2,0">
        <item>
         <widget class="QLabel" name="label">
          <property name="font">
@@ -336,10 +336,17 @@
        <item>
         <widget class="QLineEdit" name="le_barcode"/>
        </item>
+       <item>
+        <widget class="QLabel" name="label_7">
+         <property name="text">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ff0000;&quot;&gt;*&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+        </widget>
+       </item>
       </layout>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_7" stretch="1,2">
+      <layout class="QHBoxLayout" name="horizontalLayout_7" stretch="1,2,0">
        <item>
         <widget class="QLabel" name="label_6">
          <property name="font">
@@ -355,6 +362,13 @@
        </item>
        <item>
         <widget class="QLineEdit" name="le_name"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_12">
+         <property name="text">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ff0000;&quot;&gt;*&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </item>
@@ -409,6 +423,11 @@
          <item>
           <property name="text">
            <string>普通</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>高级</string>
           </property>
          </item>
         </widget>
@@ -466,7 +485,7 @@
       </layout>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_11" stretch="1,2">
+      <layout class="QHBoxLayout" name="horizontalLayout_11" stretch="1,2,0">
        <item>
         <widget class="QLabel" name="label_9">
          <property name="font">
@@ -483,10 +502,17 @@
        <item>
         <widget class="QLineEdit" name="le_license"/>
        </item>
+       <item>
+        <widget class="QLabel" name="label_13">
+         <property name="text">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ff0000;&quot;&gt;*&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+        </widget>
+       </item>
       </layout>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_12" stretch="1,2">
+      <layout class="QHBoxLayout" name="horizontalLayout_12" stretch="1,2,0">
        <item>
         <widget class="QLabel" name="label_10">
          <property name="font">
@@ -502,6 +528,13 @@
        </item>
        <item>
         <widget class="QLineEdit" name="le_phone"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_14">
+         <property name="text">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ff0000;&quot;&gt;*&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </item>

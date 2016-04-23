@@ -18,6 +18,7 @@ BookSearchForm::~BookSearchForm()
 void BookSearchForm::init()
 {
     searchType = 0;
+    firstShow = true;
     ui->label_title->setStyleSheet("color:#ff0000");
     netManager = new QNetworkAccessManager;
     netManager->setCookieJar(Tool::getInstance()->getCookieJar());
@@ -94,11 +95,13 @@ void BookSearchForm::show()
         sl.append(it.key());
     }
     ui->typeBox->addItems(sl);
-    searchType = 0;
-    ui->label_title->setText("全部图书");
-    QString tempData = "page=0";
-    initByData(tempData);
-    qDebug()<<"haha";
+    if(firstShow)
+    {
+        firstShow = false;
+        QString tempData = "page=0";
+        initByData(tempData);
+    }
+
 }
 
 void BookSearchForm::on_btn_jump_clicked()
@@ -147,6 +150,7 @@ void BookSearchForm::on_btn_query_clicked()
 void BookSearchForm::on_btn_showall_clicked()
 {
     searchType = 0;
+    ui->lineEdit->setText("");
     ui->label_title->setText("全部图书");
     QString tempData = "page=0";
     ui->spinBox->setValue(1);

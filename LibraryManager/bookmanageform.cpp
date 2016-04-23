@@ -19,6 +19,7 @@ BookManageForm::~BookManageForm()
 
 void BookManageForm::init()
 {
+    firstShow = true;
 
     //初始化按钮图标
     ui->seartBtn->setIcon(QIcon(":/image/search.png"));
@@ -43,9 +44,17 @@ void BookManageForm::init()
     ui->tv->setEditTriggers(QAbstractItemView::NoEditTriggers);
     ui->tv->setSelectionMode(QAbstractItemView::SingleSelection);
     ui->tv->setSelectionBehavior(QAbstractItemView::SelectRows);
+}
 
-    initBookData(1);  //初始化图书数据
-    initBookClass();  //初始化图书类别
+void BookManageForm::show()
+{
+    QWidget::show();
+    if(firstShow)
+    {
+        firstShow = false;
+        initBookData(1);  //初始化图书数据
+        initBookClass();  //初始化图书类别
+    }
 }
 
 void BookManageForm::initBookClass() //初始化图书类别

@@ -33,8 +33,26 @@ bool FormSwitch::showWidget(int id)
 {
     if(list.contains(id))
     {
-        list[id]->show();
-        return true;
+        if(id==0)
+        {
+            ((AdminManageForm *)list[id])->show();
+        }
+        else if(id==1)
+        {
+            ((BookManageForm *)list[id])->show();
+        }
+        else if(id==2)
+        {
+            ((ReaderManageForm *)list[id])->show();
+        }
+        else if(id==3)
+        {
+            ((BookSearchForm *)list[id])->show();
+        }
+        else if(id==4)
+        {
+            ((SettingForm *)list[id])->show();
+        }
     }
     return false;
 }

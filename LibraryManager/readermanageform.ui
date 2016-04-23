@@ -94,6 +94,13 @@
       </spacer>
      </item>
      <item>
+      <widget class="QPushButton" name="btn_edit">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QPushButton" name="btn_new">
        <property name="text">
         <string/>
@@ -102,13 +109,6 @@
      </item>
      <item>
       <widget class="QPushButton" name="btn_del">
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="btn_edit">
        <property name="text">
         <string/>
        </property>

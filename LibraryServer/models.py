@@ -137,9 +137,11 @@ class Reader(db.Model):
         arr = [self.barcode,self.name,self.sex,self.rtype,str(self.date),\
         self.license.name,self.licensenum,self.phone,self.email,self.avaliable,self.note,float(self.arrears)]
         return arr
+        
     def toSomeData(self):
         arr = [self.barcode,self.name,self.sex,self.rtype,str(self.date),\
         self.license.name,self.licensenum,self.phone,self.email,self.note]
+        return arr
 
     @staticmethod
     def getsome(datalist):

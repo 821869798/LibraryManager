@@ -36,6 +36,10 @@ private slots:
 
     void finishHttp(QNetworkReply *reply);
 
+    void on_btnOk_clicked();
+
+    void on_btnCancel_clicked();
+
 private:
     QPoint mousePoint;
     bool mousePressed;

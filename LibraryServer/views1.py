@@ -369,6 +369,8 @@ def role_changepwd():
             return "true"
     return "false"
 
+    
+
 @app.route("/test")
 def test():
     return redirect("/book/query?page=1")

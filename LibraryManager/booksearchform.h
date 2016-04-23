@@ -34,6 +34,7 @@ private:
     QNetworkAccessManager * netManager;
     int searchType;
     QButtonGroup *radioGroup;
+    bool firstShow;
 };
 
 #endif // BOOKSEARCHFORM_H
