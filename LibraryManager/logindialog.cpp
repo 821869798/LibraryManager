@@ -2,6 +2,8 @@
 #include "ui_logindialog.h"
 #include "styletool.h"
 #include "rootadmindialog.h"
+#include "adminerdialog.h"
+#include "readerdialog.h"
 #include "visitordialog.h"
 #include <QMenu>
 #include <QAction>
@@ -139,9 +141,32 @@ void LoginDialog::finishHttp(QNetworkReply *reply)
         if(repData!="false"){
             if(path=="/role/login")
             {
-                RootAdminDialog * rad = new RootAdminDialog;
-                rad->show();
-                this->close();
+                QJsonParseError json_error;
+                QJsonDocument jsonDocument = QJsonDocument::fromJson(repData.toUtf8(), &json_error);
+                if(json_error.error == QJsonParseError::NoError)
+                {
+                    QJsonObject obj = jsonDocument.object();
+                    int logintype = obj["logintype"].toInt();
+                    if(logintype==0)
+                    {
+                        ReaderDialog *rd = new ReaderDialog;
+                        rd->show();
+                        this->close();
+                    }else if(logintype==1)
+                    {
+                        int book = obj["book"].toInt();
+                        int reader = obj["reader"].toInt();
+                        AdminerDialog * ad = new AdminerDialog(book,reader);
+                        ad->show();
+                        this->close();
+                    }
+                    else if(logintype==2)
+                    {
+                        RootAdminDialog * rad = new RootAdminDialog;
+                        rad->show();
+                        this->close();
+                    }
+                }
             }
             if(path=="/booktype/getall")
             {
@@ -179,9 +204,10 @@ void LoginDialog::on_adminLoginBtn_clicked() //管理员登陆
         StyleTool::getInstance()->messageBoxError("账号或密码不能为空"); //弹出消息提示框
         return;
     }
+    int loginType = ui->adminTypeBox->currentIndex()+1;  //登陆类型
     pwd = Tool::getInstance()->getMd5String(pwd); //用md5加密密码
     QByteArray postData = Tool::getInstance()->getRequestData(QStringList()<<"username"<<"password"<<"logintype",
-                                                  QStringList()<<id<<pwd<<QString::number(2));
+                                                  QStringList()<<id<<pwd<<QString::number(loginType));
 
     QNetworkRequest req(QUrl(Tool::urlRoot+"role/login"));
     netManager->post(req,postData);
@@ -228,4 +254,21 @@ void LoginDialog::on_visitorBtn_clicked()
     VisitorDialog *vistor = new VisitorDialog;
     vistor->show();
     this->close();
+}
+
+void LoginDialog::on_readerLoginBtn_clicked()
+{
+    QString id = ui->le1->text().trimmed();
+    QString pwd = ui->le2->text().trimmed();
+    if(id=="" || pwd=="")  //账号或密码为空
+    {
+        StyleTool::getInstance()->messageBoxError("账号或密码不能为空"); //弹出消息提示框
+        return;
+    }
+    pwd = Tool::getInstance()->getMd5String(pwd); //用md5加密密码
+    QByteArray postData = Tool::getInstance()->getRequestData(QStringList()<<"username"<<"password"<<"logintype",
+                                                  QStringList()<<id<<pwd<<QString::number(0));
+    QNetworkRequest req(QUrl(Tool::urlRoot+"role/login"));
+    netManager->post(req,postData);
+
 }

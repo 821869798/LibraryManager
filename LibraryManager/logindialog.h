@@ -34,6 +34,8 @@ private slots:
     void finishHttp(QNetworkReply *reply);
     void on_visitorBtn_clicked();
 
+    void on_readerLoginBtn_clicked();
+
 private:
     Ui::LoginDialog *ui;
     QPoint mousePoint;

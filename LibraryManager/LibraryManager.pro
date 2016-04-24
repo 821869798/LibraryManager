@@ -30,7 +30,8 @@ SOURCES += main.cpp \
     formswitch.cpp \
     readereditdialog.cpp \
     adminerdialog.cpp \
-    visitordialog.cpp
+    visitordialog.cpp \
+    readerdialog.cpp
 
 HEADERS  += \
     logindialog.h \
@@ -51,7 +52,8 @@ HEADERS  += \
     formswitch.h \
     readereditdialog.h \
     adminerdialog.h \
-    visitordialog.h
+    visitordialog.h \
+    readerdialog.h
 
 FORMS    += \
     logindialog.ui \
@@ -68,7 +70,8 @@ FORMS    += \
     settingform.ui \
     readereditdialog.ui \
     adminerdialog.ui \
-    visitordialog.ui
+    visitordialog.ui \
+    readerdialog.ui
 
 RESOURCES += \
     rc.qrc

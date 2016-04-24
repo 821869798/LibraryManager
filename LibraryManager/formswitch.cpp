@@ -53,6 +53,7 @@ bool FormSwitch::showWidget(int id)
         {
             ((SettingForm *)list[id])->show();
         }
+        return true;
     }
     return false;
 }

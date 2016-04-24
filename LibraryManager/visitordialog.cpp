@@ -92,6 +92,8 @@ void VisitorDialog::InitStyle()
         ui->btnSearch->setIcon(QIcon(":/image/search.png"));
         ui->btnSearch->setIconSize(QSize(40,40));
         this->setWindowIcon(QIcon(":/image/home.png"));
+        this->setWindowTitle("游客窗口");
+
 
         //添加换肤菜单
         QMenu * skinMenu = new QMenu();

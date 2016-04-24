@@ -1,29 +1,28 @@
-#ifndef ADMINERDIALOG_H
-#define ADMINERDIALOG_H
+#ifndef READERDIALOG_H
+#define READERDIALOG_H
 
 #include <QDialog>
 #include <QMouseEvent>
 #include <QDesktopWidget>
-#include "bookmanageform.h"
-#include "readermanageform.h"
 #include "booksearchform.h"
 #include "settingform.h"
 #include "formswitch.h"
 
 namespace Ui {
-class AdminerDialog;
+class ReaderDialog;
 }
 
-class AdminerDialog : public QDialog
+class ReaderDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit AdminerDialog(int book = 0,int reader = 0,QWidget *parent = 0);
-    ~AdminerDialog();
+    explicit ReaderDialog(QWidget *parent = 0);
+    ~ReaderDialog();
 
 private:
-    Ui::AdminerDialog *ui;
+    Ui::ReaderDialog *ui;
+
 protected:
     bool eventFilter(QObject *obj, QEvent *event);
     void mouseMoveEvent(QMouseEvent *e);
@@ -39,15 +38,6 @@ private slots:
 
     void changeSkin();
 
-    void on_btnBook_clicked();
-
-    void on_btnReader_clicked();
-
-    void on_btnSearch_clicked();
-
-
-    void on_btnSetting_clicked();
-
 private:
     QPoint mousePoint;
     bool mousePressed;
@@ -55,14 +45,8 @@ private:
     QRect location;
     void InitStyle();
 
-private:
-    void init(int book,int reader);
-//    AdminManageForm *amf;
-//    BookManageForm *bmf;
-//    ReaderManageForm *rmf;
-//    BookSearchForm *bsf;
-//    SettingForm *setf;
+    init();
     FormSwitch *fs;
 };
 
-#endif // ADMINERDIALOG_H
+#endif // READERDIALOG_H

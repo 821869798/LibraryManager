@@ -1,24 +1,39 @@
-#include "adminerdialog.h"
-#include "ui_adminerdialog.h"
+#include "readerdialog.h"
+#include "ui_readerdialog.h"
 #include "styletool.h"
 #include <QMenu>
 #include <QAction>
+#include "booksearchform.h"
+#include "settingform.h"
 
-AdminerDialog::AdminerDialog(int book,int reader,QWidget *parent) :
+ReaderDialog::ReaderDialog(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::AdminerDialog)
+    ui(new Ui::ReaderDialog)
 {
     ui->setupUi(this);
-    InitStyle();
-    init(book,reader);
+    this->InitStyle();
+    this->init();
 }
 
-AdminerDialog::~AdminerDialog()
+ReaderDialog::~ReaderDialog()
 {
     delete ui;
 }
 
-bool AdminerDialog::eventFilter(QObject *obj, QEvent *event)
+ReaderDialog::init()
+{
+    fs = new FormSwitch;
+    BookSearchForm *bsf = new BookSearchForm;
+    SettingForm *sf = new SettingForm;
+    ui->h1->addWidget(bsf);
+    ui->h1->addWidget(sf);
+    fs->addWidget(bsf,3);
+    fs->addWidget(sf,4);
+    fs->hideAll();
+    fs->showWidget(3);
+}
+
+bool ReaderDialog::eventFilter(QObject *obj, QEvent *event)
 {
     if (event->type() == QEvent::MouseButtonDblClick) {
         this->on_btnMenu_Max_clicked();
@@ -27,7 +42,7 @@ bool AdminerDialog::eventFilter(QObject *obj, QEvent *event)
     return QObject::eventFilter(obj, event);
 }
 
-void AdminerDialog::mouseMoveEvent(QMouseEvent *e)
+void ReaderDialog::mouseMoveEvent(QMouseEvent *e)
 {
     if (mousePressed && (e->buttons() && Qt::LeftButton) && !max) {
         this->move(e->globalPos() - mousePoint);
@@ -35,7 +50,7 @@ void AdminerDialog::mouseMoveEvent(QMouseEvent *e)
     }
 }
 
-void AdminerDialog::mousePressEvent(QMouseEvent *e)
+void ReaderDialog::mousePressEvent(QMouseEvent *e)
 {
     if (e->button() == Qt::LeftButton) {
         mousePressed = true;
@@ -44,17 +59,17 @@ void AdminerDialog::mousePressEvent(QMouseEvent *e)
     }
 }
 
-void AdminerDialog::mouseReleaseEvent(QMouseEvent *)
+void ReaderDialog::mouseReleaseEvent(QMouseEvent *)
 {
     mousePressed = false;
 }
 
-void AdminerDialog::on_btnMenu_Close_clicked()
+void ReaderDialog::on_btnMenu_Close_clicked()
 {
     qApp->quit();
 }
 
-void AdminerDialog::on_btnMenu_Max_clicked()
+void ReaderDialog::on_btnMenu_Max_clicked()
 {
     if (max) {
         this->setGeometry(location);
@@ -69,12 +84,12 @@ void AdminerDialog::on_btnMenu_Max_clicked()
     max = !max;
 }
 
-void AdminerDialog::on_btnMenu_Min_clicked()
+void ReaderDialog::on_btnMenu_Min_clicked()
 {
     this->showMinimized();
 }
 
-void AdminerDialog::InitStyle()
+void ReaderDialog::InitStyle()
 {
         this->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowSystemMenuHint | Qt::WindowMinMaxButtonsHint);
         location = this->geometry();
@@ -88,18 +103,12 @@ void AdminerDialog::InitStyle()
         ui->btnMenu_Min->setIcon(QIcon(":/image/min.png"));
         ui->btn_Icon->setIcon(QIcon(":/image/home.png"));
         ui->btnMenu->setIcon(QIcon(":/image/skin.png"));
-
-        ui->btnBook->setIcon(QIcon(":/image/book.png"));
-        ui->btnBook->setIconSize(QSize(40,40));
-        ui->btnReader->setIcon(QIcon(":/image/user.png"));
-        ui->btnReader->setIconSize(QSize(40,40));
         ui->btnSearch->setIcon(QIcon(":/image/search.png"));
         ui->btnSearch->setIconSize(QSize(40,40));
         ui->btnSetting->setIcon(QIcon(":/image/setting.png"));
         ui->btnSetting->setIconSize(QSize(40,40));
         this->setWindowIcon(QIcon(":/image/home.png"));
-        this->setWindowTitle("管理员窗口");
-
+        this->setWindowTitle("读者窗口");
 
         //添加换肤菜单
         QMenu * skinMenu = new QMenu();
@@ -117,13 +126,13 @@ void AdminerDialog::InitStyle()
         skin6->setProperty("tag",5);
         QAction *skin7 = new QAction(QIcon(":/image/silvery.png"),"silvery  ",NULL);
         skin7->setProperty("tag",6);
-        connect(skin1,&QAction::triggered,this,&AdminerDialog::changeSkin); //按钮事件
-        connect(skin2,&QAction::triggered,this,&AdminerDialog::changeSkin);
-        connect(skin3,&QAction::triggered,this,&AdminerDialog::changeSkin);
-        connect(skin4,&QAction::triggered,this,&AdminerDialog::changeSkin);
-        connect(skin5,&QAction::triggered,this,&AdminerDialog::changeSkin);
-        connect(skin6,&QAction::triggered,this,&AdminerDialog::changeSkin);
-        connect(skin7,&QAction::triggered,this,&AdminerDialog::changeSkin);
+        connect(skin1,&QAction::triggered,this,&ReaderDialog::changeSkin); //按钮事件
+        connect(skin2,&QAction::triggered,this,&ReaderDialog::changeSkin);
+        connect(skin3,&QAction::triggered,this,&ReaderDialog::changeSkin);
+        connect(skin4,&QAction::triggered,this,&ReaderDialog::changeSkin);
+        connect(skin5,&QAction::triggered,this,&ReaderDialog::changeSkin);
+        connect(skin6,&QAction::triggered,this,&ReaderDialog::changeSkin);
+        connect(skin7,&QAction::triggered,this,&ReaderDialog::changeSkin);
         skinMenu->addAction(skin1);
         skinMenu->addAction(skin2);
         skinMenu->addAction(skin3);
@@ -135,64 +144,8 @@ void AdminerDialog::InitStyle()
         ui->btnMenu->setStyleSheet("QPushButton::menu-indicator{image:None;}");
 }
 
-
-void AdminerDialog::init(int book,int reader)
-{
-    fs = new FormSwitch;
-    ui->btnBook->hide();
-    ui->btnReader->hide();
-    if(book)
-    {
-        BookManageForm *bmf = new BookManageForm();
-        ui->h1->addWidget(bmf);
-        fs->addWidget(bmf,1);
-        ui->btnBook->show();
-    }
-    if(reader)
-    {
-        ReaderManageForm *rmf = new ReaderManageForm();
-        ui->h1->addWidget(rmf);
-        fs->addWidget(rmf,2);
-        ui->btnReader->show();
-    }
-    BookSearchForm *bsf = new BookSearchForm();
-    ui->h1->addWidget(bsf);
-    fs->addWidget(bsf,3);
-    SettingForm *setf = new SettingForm();
-    ui->h1->addWidget(setf);
-    fs->addWidget(setf,4);
-    fs->hideAll();
-    int i=1;
-    while(i<4&&!fs->showWidget(i++));//显示第一个可以显示的窗口
-}
-
-void AdminerDialog::changeSkin()
+void ReaderDialog::changeSkin()
 {
     int type = sender()->property("tag").toInt(0);
     StyleTool::getInstance()->SetStyle((StyleTool::AppStyle)type);
-}
-
-
-void AdminerDialog::on_btnBook_clicked()
-{
-    fs->hideAll();
-    fs->showWidget(1);
-}
-
-void AdminerDialog::on_btnReader_clicked()
-{
-    fs->hideAll();
-    fs->showWidget(2);
-}
-
-void AdminerDialog::on_btnSearch_clicked()
-{
-    fs->hideAll();
-    fs->showWidget(3);
-}
-
-void AdminerDialog::on_btnSetting_clicked()
-{
-    fs->hideAll();
-    fs->showWidget(4);
 }

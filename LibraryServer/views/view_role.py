@@ -17,8 +17,8 @@ def login():
     logintype = request.form.get("logintype")
     if username and password and logintype:
         username = unquote(username)
-        app.logger.debug(username + " " + password)
         logintype = tool.strtoint(logintype, -1)
+        app.logger.debug(username + " " + password+" "+str(logintype))
         if logintype is 2:
             root = RootAdminer.query.filter_by(
                 username=username, password=password).first()
@@ -39,7 +39,7 @@ def login():
             if reader:
                 session["username"] = username
                 session["logintype"] = 0
-                dic = {"logintype":0}
+                dic = {"logintype":0 ,"borrow":reader.avaliable}
                 return json.dumps(dic)
     return "false"
 

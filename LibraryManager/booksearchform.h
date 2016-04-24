@@ -14,7 +14,7 @@ class BookSearchForm : public QWidget
     Q_OBJECT
 
 public:
-    explicit BookSearchForm(QWidget *parent = 0);
+    explicit BookSearchForm(int borrow = 0,QWidget *parent = 0);
     ~BookSearchForm();
     void show();
 private slots:
@@ -35,6 +35,7 @@ private:
     int searchType;
     QButtonGroup *radioGroup;
     bool firstShow;
+    int borrow; //借书权限
 };
 
 #endif // BOOKSEARCHFORM_H

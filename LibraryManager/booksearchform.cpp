@@ -2,11 +2,12 @@
 #include "ui_booksearchform.h"
 #include "styletool.h"
 
-BookSearchForm::BookSearchForm(QWidget *parent) :
+BookSearchForm::BookSearchForm(int borrow,QWidget *parent) :
     QWidget(parent),
     ui(new Ui::BookSearchForm)
 {
     ui->setupUi(this);
+    this->borrow = borrow;
     init();
 }
 
@@ -17,6 +18,10 @@ BookSearchForm::~BookSearchForm()
 
 void BookSearchForm::init()
 {
+    if(!borrow)
+    {
+        ui->btn_borrow->hide();
+    }
     searchType = 0;
     firstShow = true;
     ui->label_title->setStyleSheet("color:#ff0000");
