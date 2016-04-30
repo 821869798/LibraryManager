@@ -101,6 +101,16 @@ def book_getcomplete():
             return json.dumps(book.toCompleteData())
     return "false"
 
+#获取一个图书的信息
+@app.route("/book/getone",methods=["GET"])
+def book_getone():
+    barcode = request.args.get("barcode")
+    if barcode:
+        book = Book.query.filter_by(barcode=barcode).first()
+        if book:
+            return json.dumps(book.toArrayData())
+    return "false"
+
 #删除图书
 @app.route("/book/delete",methods=["GET"])
 def book_delete():

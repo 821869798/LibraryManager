@@ -31,6 +31,7 @@ public:
     QByteArray getUrlEncode(QString str);  //转换url编码
     void initLicenseByArray(QJsonArray array);
     QString findLicenseById(int id);
+    void tableAppendData(QTableView *tv, QJsonArray array);
 private:
     static Tool *instance;
     QSqlDatabase db;

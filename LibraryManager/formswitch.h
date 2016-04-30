@@ -7,6 +7,7 @@
 #include "bookmanageform.h"
 #include "readermanageform.h"
 #include "booksearchform.h"
+#include "borrowhistoryform.h"
 #include "settingform.h"
 class FormSwitch
 {

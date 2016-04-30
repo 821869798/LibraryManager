@@ -26,6 +26,8 @@ private slots:
 
     void on_btn_showall_clicked();
 
+    void on_btn_showinfo_clicked();
+
 private:
     Ui::BookSearchForm *ui;
     void init();

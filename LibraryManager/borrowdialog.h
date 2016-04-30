@@ -1,30 +1,27 @@
-#ifndef READERDIALOG_H
-#define READERDIALOG_H
+#ifndef BORROWDIALOG_H
+#define BORROWDIALOG_H
 
 #include <QDialog>
 #include <QMouseEvent>
 #include <QDesktopWidget>
-#include "booksearchform.h"
-#include "settingform.h"
-#include "formswitch.h"
+#include "tool.h"
 
 namespace Ui {
-class ReaderDialog;
+class BorrowDialog;
 }
 
-class ReaderDialog : public QDialog
+class BorrowDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit ReaderDialog(QWidget *parent = 0);
-    ~ReaderDialog();
+    explicit BorrowDialog(int currentType=0,QWidget *parent = 0);
+    ~BorrowDialog();
 
 private:
-    Ui::ReaderDialog *ui;
+    Ui::BorrowDialog *ui;
 
 protected:
-    bool eventFilter(QObject *obj, QEvent *event);
     void mouseMoveEvent(QMouseEvent *e);
     void mousePressEvent(QMouseEvent *e);
     void mouseReleaseEvent(QMouseEvent *);
@@ -38,11 +35,12 @@ private slots:
 
     void changeSkin();
 
-    void on_btnBorrow_clicked();
+    void finishHttp(QNetworkReply *reply);
+    void on_btn_add_clicked();
 
-    void on_btnSetting_clicked();
+    void on_btn_del_clicked();
 
-    void on_btnSearch_clicked();
+    void on_btn_ok_clicked();
 
 private:
     QPoint mousePoint;
@@ -51,8 +49,10 @@ private:
     QRect location;
     void InitStyle();
 
-    init();
-    FormSwitch *fs;
+    int currentType;
+    QNetworkAccessManager * netManager;
+    void init();
+    bool findTableViewEqual(QString id);
 };
 
-#endif // READERDIALOG_H
+#endif // BORROWDIALOG_H

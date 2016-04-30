@@ -43,3 +43,9 @@ void SkinInputBox::on_btnOk_clicked()
         this->close();
     }
 }
+
+void SkinInputBox::setTitle(QString str)
+{
+    ui->lab_Title->setText(str);
+    this->setWindowTitle(str);
+}

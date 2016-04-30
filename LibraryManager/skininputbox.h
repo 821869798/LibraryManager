@@ -19,6 +19,7 @@ public:
         return value;
     }
 
+    void setTitle(QString str);
 private slots:
     void on_btnOk_clicked();
 

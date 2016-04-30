@@ -294,7 +294,7 @@
       <item>
        <widget class="QTabWidget" name="tabWidget">
         <property name="currentIndex">
-         <number>1</number>
+         <number>2</number>
         </property>
         <widget class="QWidget" name="tab">
          <attribute name="title">
@@ -400,7 +400,7 @@
          <widget class="QPushButton" name="visitorBtn">
           <property name="geometry">
            <rect>
-            <x>60</x>
+            <x>50</x>
             <y>190</y>
             <width>101</width>
             <height>31</height>
@@ -553,6 +553,37 @@
           </property>
           <property name="text">
            <string>登陆类型</string>
+          </property>
+         </widget>
+        </widget>
+        <widget class="QWidget" name="tab_3">
+         <attribute name="title">
+          <string>借书与还书</string>
+         </attribute>
+         <widget class="QPushButton" name="btn_return">
+          <property name="geometry">
+           <rect>
+            <x>140</x>
+            <y>160</y>
+            <width>101</width>
+            <height>31</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>还书</string>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="btn_borrow">
+          <property name="geometry">
+           <rect>
+            <x>140</x>
+            <y>80</y>
+            <width>101</width>
+            <height>31</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>借书</string>
           </property>
          </widget>
         </widget>

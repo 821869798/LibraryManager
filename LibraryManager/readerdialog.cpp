@@ -25,10 +25,13 @@ ReaderDialog::init()
     fs = new FormSwitch;
     BookSearchForm *bsf = new BookSearchForm;
     SettingForm *sf = new SettingForm;
+    BorrowHistoryForm * bhf = new BorrowHistoryForm;
     ui->h1->addWidget(bsf);
     ui->h1->addWidget(sf);
+    ui->h1->addWidget(bhf);
     fs->addWidget(bsf,3);
     fs->addWidget(sf,4);
+    fs->addWidget(bhf,5);
     fs->hideAll();
     fs->showWidget(3);
 }
@@ -107,6 +110,10 @@ void ReaderDialog::InitStyle()
         ui->btnSearch->setIconSize(QSize(40,40));
         ui->btnSetting->setIcon(QIcon(":/image/setting.png"));
         ui->btnSetting->setIconSize(QSize(40,40));
+        ui->btnBorrow->setIcon(QIcon(":/image/book.png"));
+        ui->btnBorrow->setIconSize(QSize(40,40));
+        ui->btnInfo->setIcon(QIcon(":/image/login.png"));
+        ui->btnInfo->setIconSize(QSize(40,40));
         this->setWindowIcon(QIcon(":/image/home.png"));
         this->setWindowTitle("读者窗口");
 
@@ -148,4 +155,22 @@ void ReaderDialog::changeSkin()
 {
     int type = sender()->property("tag").toInt(0);
     StyleTool::getInstance()->SetStyle((StyleTool::AppStyle)type);
+}
+
+void ReaderDialog::on_btnBorrow_clicked()
+{
+    fs->hideAll();
+    fs->showWidget(5);
+}
+
+void ReaderDialog::on_btnSetting_clicked()
+{
+    fs->hideAll();
+    fs->showWidget(4);
+}
+
+void ReaderDialog::on_btnSearch_clicked()
+{
+    fs->hideAll();
+    fs->showWidget(3);
 }

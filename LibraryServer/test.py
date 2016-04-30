@@ -2,6 +2,7 @@ from manage import db
 from models import *
 import json
 from urllib.parse import unquote
+import datetime
 
 def strtoint(s, default):
     try:
@@ -31,3 +32,35 @@ def strtoint(s, default):
 # db.session.add(book)
 # db.session.commit()
 # print(book.name)
+# today = datetime.date.today()
+# dat = datetime.timedelta(3)
+# today = today+dat
+# print(today)
+
+# root = RootAdminer(username="root1",password="123")
+# db.session.add(root)
+# print(root.id)
+# reader = Reader.query.filter_by(barcode="1200110101").first()
+# borrowlist = reader.borrows.all()
+# for i,value in enumerate(borrowlist):
+#     borrowlist[i] = value.book
+# book = Book.query.get(1)
+# print(book)
+# for line in borrowlist:
+#     print(line)
+# if book in borrowlist:
+#     print("book")
+# else:
+#     print("error")
+# reader = Reader.query.filter_by(barcode="1200110102").first()
+# book = Book.query.get(1)
+# borrow = book.borrows.filter_by(reader=reader).first()
+# print(borrow)
+# date1 = datetime.date(2016,6,7)
+# date2 = datetime.date(2016,7,10)
+# print((date1-date2).days)
+role = None
+if role >=0:
+    print("asd")
+else:
+    print("wer")

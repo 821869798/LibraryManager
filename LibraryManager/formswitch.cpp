@@ -53,6 +53,10 @@ bool FormSwitch::showWidget(int id)
         {
             ((SettingForm *)list[id])->show();
         }
+        else if(id==5)
+        {
+            ((BorrowHistoryForm *)list[id])->show();
+        }
         return true;
     }
     return false;

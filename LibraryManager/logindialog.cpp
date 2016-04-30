@@ -5,6 +5,7 @@
 #include "adminerdialog.h"
 #include "readerdialog.h"
 #include "visitordialog.h"
+#include "borrowdialog.h"
 #include <QMenu>
 #include <QAction>
 
@@ -271,4 +272,18 @@ void LoginDialog::on_readerLoginBtn_clicked()
     QNetworkRequest req(QUrl(Tool::urlRoot+"role/login"));
     netManager->post(req,postData);
 
+}
+
+void LoginDialog::on_btn_borrow_clicked()
+{
+    BorrowDialog *borrowDialog = new BorrowDialog;
+    borrowDialog->show();
+    this->close();
+}
+
+void LoginDialog::on_btn_return_clicked()
+{
+    BorrowDialog *borrowDialog = new BorrowDialog(1);
+    borrowDialog->show();
+    this->close();
 }

@@ -1,6 +1,7 @@
 #include "booksearchform.h"
 #include "ui_booksearchform.h"
 #include "styletool.h"
+#include "bookinfodialog.h"
 
 BookSearchForm::BookSearchForm(int borrow,QWidget *parent) :
     QWidget(parent),
@@ -160,4 +161,14 @@ void BookSearchForm::on_btn_showall_clicked()
     QString tempData = "page=0";
     ui->spinBox->setValue(1);
     initByData(tempData);
+}
+
+void BookSearchForm::on_btn_showinfo_clicked()
+{
+    int row = ui->tv->currentIndex().row();
+    if(row>=0){
+       QString id = ui->tv->model()->data(ui->tv->model()->index(row,0)).toString();
+       BookInfoDialog *bid = new BookInfoDialog(id);
+       bid->show();
+    }
 }

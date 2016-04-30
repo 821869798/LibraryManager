@@ -138,10 +138,10 @@ class Reader(db.Model):
         self.license.name,self.licensenum,self.phone,self.email,self.avaliable,self.note,float(self.arrears)]
         return arr
         
-    def toSomeData(self):
-        arr = [self.barcode,self.name,self.sex,self.rtype,str(self.date),\
-        self.license.name,self.licensenum,self.phone,self.email,self.note]
-        return arr
+    # def toSomeData(self):
+    #     arr = [self.barcode,self.name,self.sex,self.rtype,str(self.date),\
+    #     self.license.name,self.licensenum,self.phone,self.email,self.note]
+    #     return arr
 
     @staticmethod
     def getsome(datalist):
@@ -161,6 +161,11 @@ class Borrow(db.Model):
     rdate = db.Column(db.Date)
     renew = db.Column(db.Integer, nullable=False, default=1)
 
+    def toArrayData(self):
+        arr = [self.book.barcode,self.book.name,self.book.author,str(self.bdate),\
+        str(self.rdate),self.renew]
+        return arr
+
 # 借阅历史
 
 
@@ -172,6 +177,16 @@ class History(db.Model):
     rdate = db.Column(db.Date, nullable=False, default=date.today())
     overdue = db.Column(db.Integer, nullable=False, default=0)
     pageCount = 10
+
+    def toArrayData(self):
+        days = self.overdue
+        if days is 0:
+            days = "无"
+        else:
+            days = ""+days+"天"
+        arr = [self.book.barcode,self.book.name,self.book.author,str(self.bdate),str(self.rdate),days]
+        return arr
+
 # 遗失图书
 
 

@@ -1,30 +1,28 @@
-#ifndef READERDIALOG_H
-#define READERDIALOG_H
+#ifndef BORROWCOMPLETEDIALOG_H
+#define BORROWCOMPLETEDIALOG_H
 
 #include <QDialog>
 #include <QMouseEvent>
 #include <QDesktopWidget>
-#include "booksearchform.h"
-#include "settingform.h"
-#include "formswitch.h"
+#include "tool.h"
+
 
 namespace Ui {
-class ReaderDialog;
+class BorrowCompleteDialog;
 }
 
-class ReaderDialog : public QDialog
+class BorrowCompleteDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit ReaderDialog(QWidget *parent = 0);
-    ~ReaderDialog();
+    explicit BorrowCompleteDialog(QJsonObject jsonObj,int currentType=0,QWidget *parent = 0);
+    ~BorrowCompleteDialog();
 
 private:
-    Ui::ReaderDialog *ui;
+    Ui::BorrowCompleteDialog *ui;
 
 protected:
-    bool eventFilter(QObject *obj, QEvent *event);
     void mouseMoveEvent(QMouseEvent *e);
     void mousePressEvent(QMouseEvent *e);
     void mouseReleaseEvent(QMouseEvent *);
@@ -38,11 +36,7 @@ private slots:
 
     void changeSkin();
 
-    void on_btnBorrow_clicked();
-
-    void on_btnSetting_clicked();
-
-    void on_btnSearch_clicked();
+    void on_pushButton_clicked();
 
 private:
     QPoint mousePoint;
@@ -51,8 +45,9 @@ private:
     QRect location;
     void InitStyle();
 
-    init();
-    FormSwitch *fs;
+    int currentType;
+
+    void init(QJsonObject jsonObj);
 };
 
-#endif // READERDIALOG_H
+#endif // BORROWCOMPLETEDIALOG_H

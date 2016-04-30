@@ -1,5 +1,5 @@
-#ifndef LOGINDIALOG_H
-#define LOGINDIALOG_H
+#ifndef BOOKINFODIALOG_H
+#define BOOKINFODIALOG_H
 
 #include <QDialog>
 #include <QMouseEvent>
@@ -7,18 +7,21 @@
 #include "tool.h"
 
 namespace Ui {
-class LoginDialog;
+class BookInfoDialog;
 }
 
-class LoginDialog : public QDialog
+class BookInfoDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit LoginDialog(QWidget *parent = 0);
-    ~LoginDialog();
-protected:
+    explicit BookInfoDialog(QString currentId,QWidget *parent = 0);
+    ~BookInfoDialog();
 
+private:
+    Ui::BookInfoDialog *ui;
+
+protected:
     void mouseMoveEvent(QMouseEvent *e);
     void mousePressEvent(QMouseEvent *e);
     void mouseReleaseEvent(QMouseEvent *);
@@ -26,29 +29,23 @@ protected:
 private slots:
     void on_btnMenu_Close_clicked();
 
+    void on_btnMenu_Max_clicked();
 
     void on_btnMenu_Min_clicked();
-    void on_adminLoginBtn_clicked();
 
     void changeSkin();
+
     void finishHttp(QNetworkReply *reply);
-    void on_visitorBtn_clicked();
-
-    void on_readerLoginBtn_clicked();
-
-    void on_btn_borrow_clicked();
-
-    void on_btn_return_clicked();
-
 private:
-    Ui::LoginDialog *ui;
     QPoint mousePoint;
     bool mousePressed;
+    bool max;
     QRect location;
     void InitStyle();
-    void init();
 
+    QString currentId;
     QNetworkAccessManager * netManager;
+    void init();
 };
 
-#endif // LOGINDIALOG_H
+#endif // BOOKINFODIALOG_H

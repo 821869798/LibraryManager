@@ -65,6 +65,16 @@ void Tool::tableAddData(QTableView *tv,QJsonArray array)
     }
 }
 
+void Tool::tableAppendData(QTableView *tv,QJsonArray array)
+{
+    QStandardItemModel *model = (QStandardItemModel*)tv->model();
+    int row = model->rowCount();
+    for(int j=0;j<array.size();j++)
+    {
+        model->setItem(row,j,new QStandardItem(array[j].toVariant().toString()));
+    }
+}
+
 QByteArray Tool::getUrlEncode(QString str)
 {
     return codec->fromUnicode(str).toPercentEncoding();

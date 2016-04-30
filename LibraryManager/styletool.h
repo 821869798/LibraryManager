@@ -26,7 +26,7 @@ public:
     int messageBoxQuesion(QString info); //显示询问框,确定和取消按钮
     void messageBoxError(QString info);  //显示错误框,仅确定按钮
 
-    QString showInputBox(QString info, bool &ok);
+    QString showInputBox(QString info, bool &ok,QString title="");
     void netError();
 };
 

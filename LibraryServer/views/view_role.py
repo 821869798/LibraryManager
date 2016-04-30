@@ -46,18 +46,17 @@ def login():
 
 @app.route("/role/changepwd",methods=["POST"])
 def role_changepwd():
-    logintype = session.get("logintype")
+    logintype = tool.strtoint(session.get("logintype"),-1)
     username = session.get("username")
-
-    if logintype and username:
+    if logintype >=0 and username:
         old_pwd = request.form.get("old")
         new_pwd = request.form.get("new")
-        logintype = tool.strtoint(logintype,-1)
         if logintype is 2:
             role = RootAdminer.query.filter_by(username=username).first()
         elif logintype is 1:
             role = Adminer.query.filter_by(username=username).first()
         elif logintype is 0:
+
             role = Reader.query.filter_by(barcode=username).first()
         if role and role.password==old_pwd:
             role.password = new_pwd

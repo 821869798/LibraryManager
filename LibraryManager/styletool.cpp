@@ -68,8 +68,12 @@ void StyleTool::netError()
     messageBoxError("网络连接失败！");
 }
 
-QString StyleTool::showInputBox(QString info, bool &ok) {
+QString StyleTool::showInputBox(QString info, bool &ok,QString title) {
         SkinInputBox input;
+        if(title!="")
+        {
+            input.setTitle(title);
+        }
         input.SetMessage(info);
         ok = input.exec();
         return input.GetValue();
