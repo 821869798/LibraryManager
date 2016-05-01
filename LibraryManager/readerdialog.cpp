@@ -5,6 +5,7 @@
 #include <QAction>
 #include "booksearchform.h"
 #include "settingform.h"
+#include "readerinfoform.h"
 
 ReaderDialog::ReaderDialog(QWidget *parent) :
     QDialog(parent),
@@ -26,12 +27,15 @@ ReaderDialog::init()
     BookSearchForm *bsf = new BookSearchForm;
     SettingForm *sf = new SettingForm;
     BorrowHistoryForm * bhf = new BorrowHistoryForm;
+    ReaderInfoForm *rid = new ReaderInfoForm;
     ui->h1->addWidget(bsf);
     ui->h1->addWidget(sf);
     ui->h1->addWidget(bhf);
+    ui->h1->addWidget(rid);
     fs->addWidget(bsf,3);
     fs->addWidget(sf,4);
     fs->addWidget(bhf,5);
+    fs->addWidget(rid,6);
     fs->hideAll();
     fs->showWidget(3);
 }
@@ -173,4 +177,10 @@ void ReaderDialog::on_btnSearch_clicked()
 {
     fs->hideAll();
     fs->showWidget(3);
+}
+
+void ReaderDialog::on_btnInfo_clicked()
+{
+    fs->hideAll();
+    fs->showWidget(6);
 }

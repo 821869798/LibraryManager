@@ -9,6 +9,7 @@
 #include "booksearchform.h"
 #include "borrowhistoryform.h"
 #include "settingform.h"
+#include "readerinfoform.h"
 class FormSwitch
 {
 public:

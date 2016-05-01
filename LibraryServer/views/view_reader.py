@@ -30,6 +30,7 @@ def reader_query():
         return json.dumps(Reader.getsome(readerlist))
     return "false"
 
+#管理员获取读者信息
 @app.route("/reader/getone",methods=["GET"])
 def reader_getone():
     if tool.readermanageValid(session):
@@ -37,9 +38,21 @@ def reader_getone():
         if barcode:
             reader = Reader.query.filter_by(barcode=barcode).first()
             if reader:
-                return json.dumps(reader.toSomeData()) 
+                return json.dumps(reader.toArrayData()) 
     return "false"
 
+#读者自己获取信息
+@app.route("/reader/getself",methods=["GET"])
+def reader_getself():
+    logintype = tool.strtoint(session.get("logintype"),-1)
+    username = session.get("username")
+    if logintype is 0 and username:
+        reader = Reader.query.filter_by(barcode=username).first()
+        if reader:
+            return json.dumps(reader.toArrayData())
+    return "false"
+
+#更改读者信息
 @app.route("/reader/change",methods=["POST"])
 def reader_change():
     if tool.readermanageValid(session):
@@ -64,6 +77,7 @@ def reader_change():
                 return "true"
     return "false";
 
+#增加读者
 @app.route("/reader/new",methods=["POST"])
 def reader_new():
     if tool.readermanageValid(session):

@@ -132,6 +132,7 @@ class Reader(db.Model):
     historys = db.relationship("History", backref="reader", lazy="dynamic")
     # losebooks = db.relationship("LoseBook", backref="reader", lazy="dynamic")
     pageCount = 10
+    maxBorrow = 10
 
     def toArrayData(self):
         arr = [self.barcode,self.name,self.sex,self.rtype,str(self.date),\

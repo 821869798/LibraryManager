@@ -107,7 +107,8 @@ void BorrowHistoryForm::finishHttp(QNetworkReply *reply)
         {
             if(repData!="false")
             {
-
+                StyleTool::getInstance()->messageBoxInfo("成功续借"+repData+"本书");
+                showAllBorrow();
             }
             else
             {
@@ -120,4 +121,56 @@ void BorrowHistoryForm::finishHttp(QNetworkReply *reply)
     {
         StyleTool::getInstance()->netError();
     }
+}
+
+void BorrowHistoryForm::on_btn_renew_one_clicked()
+{
+    int row = ui->tv->currentIndex().row();
+    if(row>=0){
+        QString barcode = ui->tv->model()->data(ui->tv->model()->index(row,0)).toString();
+        QJsonArray array;
+        array.append(barcode);
+        QJsonDocument document;
+        document.setArray(array);
+        QString json_str(document.toJson());
+        QByteArray postData = Tool::getInstance()->getRequestData(
+                    QStringList()<<"data",
+                    QStringList()<<json_str
+                    );
+        QNetworkRequest req(QUrl(Tool::urlRoot+"borrow/renew"));
+        netManager->post(req,postData);
+    }
+}
+
+void BorrowHistoryForm::on_btn_renew_all_clicked()
+{
+    QStandardItemModel *model = (QStandardItemModel*)ui->tv->model();
+    int rowCount = model->rowCount();
+    if(rowCount==0)
+    {
+        StyleTool::getInstance()->messageBoxError("借阅列表为空！");
+        return;
+    }
+    QJsonArray array;
+    for(int i = 0; i<rowCount;i++)
+    {
+        QString barcode = model->index(i,0).data().toString();
+        array.append(barcode);
+    }
+    QJsonDocument document;
+    document.setArray(array);
+    QString json_str(document.toJson());
+    QByteArray postData = Tool::getInstance()->getRequestData(
+                QStringList()<<"data",
+                QStringList()<<json_str
+                );
+    QNetworkRequest req(QUrl(Tool::urlRoot+"borrow/renew"));
+    netManager->post(req,postData);
+}
+
+
+void BorrowHistoryForm::on_btn_getHistory_clicked()
+{
+    int value = ui->spinBox->value();
+    showBorrowHistory(value);
 }

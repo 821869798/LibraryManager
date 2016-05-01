@@ -20,6 +20,11 @@ private slots:
     void on_comboBox_currentIndexChanged(int index);
 
     void finishHttp(QNetworkReply *reply);
+    void on_btn_renew_one_clicked();
+
+    void on_btn_renew_all_clicked();
+    void on_btn_getHistory_clicked();
+
 private:
     Ui::BorrowHistoryForm *ui;
 

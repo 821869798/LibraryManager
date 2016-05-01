@@ -27,9 +27,12 @@ def borrow_add():
                 else:
                     replist = []
                     borrowlist = reader.borrows.all()
+                    borrowCount = reader.borrows.count()
                     for i,value in enumerate(borrowlist):
                         borrowlist[i] = value.book
                     for barcode in booklist:
+                        if borrowCount > Reader.maxBorrow:
+                            break
                         book = Book.query.filter_by(barcode=barcode).first()
                         if book and book not in borrowlist and book.allcount-book.borrows.count() > 0:
                             borrow = Borrow()
@@ -43,6 +46,7 @@ def borrow_add():
                             replist.append([book.barcode,book.name,book.author,book.allcount-book.borrows.count()+1,\
                                 str(borrow.bdate),str(borrow.rdate),borrow.renew])
                             db.session.add(borrow)
+                            borrowCount += 1
                     db.session.commit()
                     if replist:
                         repDict["borrowlist"] = replist
@@ -126,6 +130,21 @@ def borrow_history():
 def borrow_renew():
     logintype = tool.strtoint(session.get("logintype"),-1)
     username = session.get("username")
-    if logintype is 0 and username:
-        pass
+    borrowlist = request.form.get("data")
+    if logintype is 0 and username and borrowlist:
+        borrowlist = unquote(borrowlist)
+        borrowlist = json.loads(borrowlist)
+        reader = Reader.query.filter_by(barcode=username).first()
+        if reader:
+            count = 0
+            for barcode in borrowlist:
+                book = Book.query.filter_by(barcode=barcode).first()
+                borrow = reader.borrows.filter_by(book=book).first()
+                if borrow and borrow.renew > 0 :
+                    borrow.renew -= 1
+                    borrow.rdate = borrow.rdate+datetime.timedelta(30)
+                    count += 1
+                    db.session.add(borrow)
+            db.session.commit()
+            return ("%d" % count)
     return "false"

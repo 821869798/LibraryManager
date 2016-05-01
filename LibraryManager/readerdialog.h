@@ -44,6 +44,8 @@ private slots:
 
     void on_btnSearch_clicked();
 
+    void on_btnInfo_clicked();
+
 private:
     QPoint mousePoint;
     bool mousePressed;

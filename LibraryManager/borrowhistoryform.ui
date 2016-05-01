@@ -73,14 +73,14 @@
          </spacer>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton">
+         <widget class="QPushButton" name="btn_renew_one">
           <property name="text">
            <string>续借选中书</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_2">
+         <widget class="QPushButton" name="btn_renew_all">
           <property name="text">
            <string>续借全部书</string>
           </property>
@@ -114,7 +114,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_3">
+         <widget class="QPushButton" name="btn_getHistory">
           <property name="text">
            <string>跳转</string>
           </property>

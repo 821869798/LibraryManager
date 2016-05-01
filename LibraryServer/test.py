@@ -59,8 +59,7 @@ def strtoint(s, default):
 # date1 = datetime.date(2016,6,7)
 # date2 = datetime.date(2016,7,10)
 # print((date1-date2).days)
-role = None
-if role >=0:
-    print("asd")
-else:
-    print("wer")
+barcode = "10000001"
+book = Book.query.filter_by(barcode=barcode).first()
+reader = Reader.query.filter_by(barcode="1200110101").first()
+print(reader.borrows.count())
