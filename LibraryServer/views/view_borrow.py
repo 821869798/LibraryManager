@@ -5,6 +5,7 @@ from urllib.parse import unquote
 import views.tool as tool
 import json
 import datetime
+import decimal
 
 def log(sss):
     app.logger.debug(sss)
@@ -38,7 +39,7 @@ def borrow_add():
                             borrow = Borrow()
                             borrow.reader,borrow.book = reader,book
                             borrow.bdate = datetime.date.today()
-                            borrow.rdate = borrow.bdate+datetime.timedelta(30)
+                            borrow.rdate = borrow.bdate+datetime.timedelta(book.booktype.borrownum)
                             if reader.rtype is 1:
                                 borrow.renew = 2
                             else:
@@ -87,8 +88,8 @@ def borrow_return():
                             if days is 0:
                                 days = "无"
                             else:
-                                reader.arrears += days*0.1
-                                days = ""+days+"天"
+                                reader.arrears += decimal.Decimal("%f"%(days*0.1))
+                                days = ""+str(days)+"天"
                             replist.append([book.barcode,book.name,book.author,str(history.bdate),str(history.rdate),days])
                 db.session.add(reader)
                 db.session.commit()

@@ -24,7 +24,7 @@ def dropall():
         db.drop_all()
 
 # if __name__ == "__main__":
-#     manager.run()
+    # manager.run()
 
 if __name__ == "__main__":
     app.run(debug=True)

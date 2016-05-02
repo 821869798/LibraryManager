@@ -65,9 +65,10 @@ def strtoint(s, default):
 # reader = Reader.query.filter_by(barcode="1200110101").first()
 # print(reader.borrows.count())
 
-reader = Reader.query.filter_by(barcode="1200110101").first()
+#reader = Reader.query.filter_by(barcode="1200110101").first()
 # a = 0
 # reader.arrears = and
-db.session.add(reader)
-db.session.commit()
-print(reader.arrears)
+# db.session.add(reader)
+# db.session.commit()
+# print(reader.arrears)
+print("gagag阿迪斯")

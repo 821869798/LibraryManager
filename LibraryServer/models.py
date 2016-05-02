@@ -136,7 +136,7 @@ class Reader(db.Model):
 
     def toArrayData(self):
         arr = [self.barcode,self.name,self.sex,self.rtype,str(self.date),\
-        self.license.name,self.licensenum,self.phone,self.email,self.avaliable,self.note,float(self.arrears)]
+        self.license.name,self.licensenum,self.phone,self.email,self.avaliable,self.note,str(self.arrears)]
         return arr
         
     # def toSomeData(self):
@@ -184,7 +184,7 @@ class History(db.Model):
         if days is 0:
             days = "无"
         else:
-            days = ""+days+"天"
+            days = ""+str(days)+"天"
         arr = [self.book.barcode,self.book.name,self.book.author,str(self.bdate),str(self.rdate),days]
         return arr
 
