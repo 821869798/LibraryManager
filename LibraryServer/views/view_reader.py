@@ -4,6 +4,7 @@ from flask import session,redirect,request
 from urllib.parse import unquote
 import views.tool as tool
 import json
+import decimal
 
 def log(sss):
     app.logger.debug(sss)
@@ -102,17 +103,49 @@ def reader_new():
                 return "true"
     return "false"
 
-@app.route("/reader/delete",methods=["POST"])
+@app.route("/reader/delete",methods=["GET"])
 def reader_delete():
+    if tool.readermanageValid(session):
+        barcode = request.args.get("barcode")
+        if barcode:
+            reader = Reader.query.filter_by(barcode=barcode).first()
+            if reader:
+                borrows = reader.borrows.all()
+                for borrow in borrows:
+                    db.session.delete(borrow)
+                historys = reader.historys.all()
+                for history in historys:
+                    db.session.delete(history)
+                db.session.delete(reader)
+                db.session.commit()
+                return "true"
     return "false"
 
-@app.route("/test1",methods=["GET"])
-def test1():
-    arg1 = request.args.get("a")
-    arg2 = request.args.get("b")
-    
-    if arg1 is not None and arg2 is not None:
-        log("arg1:"+arg1)
-        log("arg2:"+arg2)
-        
+@app.route("/reader/change/other",methods=["POST"])
+def reader_change_other():
+    if tool.readermanageValid(session):
+        barcode = request.form.get("barcode")
+        data = request.form.get("data")
+        if barcode and data:
+            reader = Reader.query.filter_by(barcode=barcode).first()
+            dataDict = json.loads(data)
+            if reader:
+                if "avaliable" in dataDict:
+                    reader.avaliable = dataDict["avaliable"]
+                if "arrears" in dataDict:
+                    reader.arrears = dataDict["arrears"]
+                db.session.add(reader)
+                db.session.commit()
+                return "true"
     return "false"
+
+# @app.route("/test1",methods=["GET"])
+# def test1():
+#     arg1 = request.args.get("a")
+#     arg2 = request.args.get("b")
+    
+#     if arg1 is not None and arg2 is not None:
+#         log("arg1:"+arg1)
+#         log("arg2:"+arg2)
+        
+#     return "false"

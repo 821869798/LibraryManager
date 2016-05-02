@@ -123,14 +123,35 @@ void LoginDialog::init()
     ui->le2->setEchoMode(QLineEdit::Password);
     ui->le4->setEchoMode(QLineEdit::Password);
 
+    //滚动标题
+    tipString = "欢迎来到梧州学院图书管理系统,默认密码123456";
+    QTimer *timer = new QTimer(this);
+    connect(timer,&QTimer::timeout,this,&LoginDialog::scrollCaption);
+    timer->start(300);
+
+
+    //初始化网络
     netManager = new QNetworkAccessManager;
     netManager->setCookieJar(Tool::getInstance()->getCookieJar());
     connect(netManager,&QNetworkAccessManager::finished,this,&LoginDialog::finishHttp);
 
+    //向服务端发送get请求
     QNetworkRequest req(QUrl(Tool::urlRoot+"booktype/getall"));
     netManager->get(req);
     req.setUrl(QUrl(Tool::urlRoot+"license/getall"));
     netManager->get(req);
+
+}
+
+void LoginDialog::scrollCaption()
+{
+        static int nPos = 0;
+        if (nPos >tipString.length() )
+        {
+            nPos = 0;
+        }
+        ui->lable_tip->setText(tipString.mid(nPos));
+        nPos++;
 }
 
 void LoginDialog::finishHttp(QNetworkReply *reply)
@@ -211,43 +232,9 @@ void LoginDialog::on_adminLoginBtn_clicked() //管理员登陆
                                                   QStringList()<<id<<pwd<<QString::number(loginType));
 
     QNetworkRequest req(QUrl(Tool::urlRoot+"role/login"));
+    req.setHeader(QNetworkRequest::ContentTypeHeader,"application/x-www-form-urlencoded");
     netManager->post(req,postData);
 
-
-//    QSqlDatabase db = Tool::getInstance()->getDb();
-//    QSqlQuery query(db);
-//    QString sql;
-//    if(ui->adminTypeBox->currentIndex()==1){
-//        sql = "select * from 管理员 where 账号=:id and 密码=:pwd";
-//    }else{
-//        sql = "select * from 系统管理员 where 账号=:id and 密码=:pwd";
-//    }
-//    query.prepare(sql);
-//    query.bindValue(":id",id);
-//    query.bindValue(":pwd",pwd);
-//    query.exec();
-//    if(query.next()){
-        //        UsrInformation::getInstance()->id = query.value(0).toString();
-        //        UsrInformation::getInstance()->type = query.value(4).toInt(0);
-        //        UsrInformation::getInstance()->borrowNum = query.value(5).toInt(0);
-        //        ReaderDialog *rd = new ReaderDialog;
-        //        rd->show();
-        //        this->close();
-//        if(ui->adminTypeBox->currentIndex()==0){
-
-//        }else{
-//            RootAdminDialog *rad = new RootAdminDialog();
-//            rad->show();
-//        }
-//        RootAdminDialog *rad = new RootAdminDialog();
-//        rad->show();
-//        this->close();
-//    }
-//    else{
-//        StyleTool::getInstance()->messageBoxError("账号或密码错误");
-//        ui->le3->setText("");
-//        ui->le4->setText("");
-//    }
 }
 
 void LoginDialog::on_visitorBtn_clicked()
@@ -270,6 +257,7 @@ void LoginDialog::on_readerLoginBtn_clicked()
     QByteArray postData = Tool::getInstance()->getRequestData(QStringList()<<"username"<<"password"<<"logintype",
                                                   QStringList()<<id<<pwd<<QString::number(0));
     QNetworkRequest req(QUrl(Tool::urlRoot+"role/login"));
+    req.setHeader(QNetworkRequest::ContentTypeHeader,"application/x-www-form-urlencoded");
     netManager->post(req,postData);
 
 }

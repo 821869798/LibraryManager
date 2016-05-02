@@ -50,6 +50,7 @@ private:
 
     QString currentId;
     QNetworkAccessManager * netManager;
+    void changeReaderOther(QString json_str);
 };
 
 #endif // READEREDITDIALOG_H

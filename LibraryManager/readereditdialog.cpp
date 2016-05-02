@@ -237,6 +237,7 @@ void ReaderEditDialog::on_btnOk_clicked()
         req.setUrl(QUrl(Tool::urlRoot+"reader/new"));
     else
         req.setUrl(QUrl(Tool::urlRoot+"reader/change"));
+    req.setHeader(QNetworkRequest::ContentTypeHeader,"application/x-www-form-urlencoded");
     netManager->post(req,postData);
 
 }

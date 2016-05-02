@@ -3,6 +3,7 @@
 #include "borrowcompletedialog.h"
 #include "styletool.h"
 #include "tool.h"
+#include "logindialog.h"
 #include <QMenu>
 #include <QAction>
 
@@ -311,5 +312,13 @@ void BorrowDialog::on_btn_ok_clicked()
     {
         req.setUrl(QUrl(Tool::urlRoot+"borrow/add"));
     }
+    req.setHeader(QNetworkRequest::ContentTypeHeader,"application/x-www-form-urlencoded");
     netManager->post(req,postData);
+}
+
+void BorrowDialog::on_bt_login_clicked()
+{
+    LoginDialog *ld = new LoginDialog;
+    ld->show();
+    this->close();
 }

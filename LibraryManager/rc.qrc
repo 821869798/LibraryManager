@@ -45,5 +45,6 @@
         <file>image/skin.png</file>
         <file>image/submit.png</file>
         <file>image/user.png</file>
+        <file>image/power.png</file>
     </qresource>
 </RCC>

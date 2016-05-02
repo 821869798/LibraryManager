@@ -72,9 +72,9 @@ void ReaderManageForm::finishHttp(QNetworkReply *reply)
     {
         QString repData = QString(reply->readAll());
         QString path = reply->url().path();
-        if(repData!="false")
+        if(path=="/reader/query")
         {
-            if(path=="/reader/query")
+            if(repData!="false")
             {
                 QJsonParseError json_error;
                 QJsonDocument jsonDocument = QJsonDocument::fromJson(repData.toUtf8(), &json_error);
@@ -111,10 +111,39 @@ void ReaderManageForm::finishHttp(QNetworkReply *reply)
                     }
                 }
             }
+            else
+            {
+                StyleTool::getInstance()->messageBoxError("获取数据失败!");
+            }
+
         }
-        else
+        if(path=="/reader/delete")
         {
-            StyleTool::getInstance()->messageBoxError("操作失败!");
+            if(repData=="true")
+            {
+                QString tempData = "page=0";
+                ui->spinBox->setValue(1);
+                initByData(tempData);
+                StyleTool::getInstance()->messageBoxInfo("删除读者成功！");
+            }
+            else
+            {
+                StyleTool::getInstance()->messageBoxError("删除读者失败！");
+            }
+        }
+        if(path=="/reader/change/other")
+        {
+               if(repData=="true")
+               {
+                   QString tempData = "page=0";
+                   ui->spinBox->setValue(1);
+                   initByData(tempData);
+                    StyleTool::getInstance()->messageBoxInfo("更改成功！");
+               }
+               else
+               {
+                   StyleTool::getInstance()->messageBoxError("更改失败！");
+               }
         }
     }
     else{
@@ -197,5 +226,64 @@ void ReaderManageForm::on_btn_edit_clicked()
            ui->spinBox->setValue(1);
            initByData(tempData);
        }
+    }
+}
+
+void ReaderManageForm::on_btn_del_clicked()
+{
+    int row = ui->tv->currentIndex().row();
+    if(row>=0){
+        int ok = StyleTool::getInstance()->messageBoxQuesion("确认要删除该读者吗？");
+        if(ok==1){
+            QString id = ui->tv->model()->data(ui->tv->model()->index(row,0)).toString();
+            QNetworkRequest req(QUrl(Tool::urlRoot+"reader/delete?barcode="+id));
+            netManager->get(req);
+        }
+    }
+}
+
+void ReaderManageForm::on_btn_avaliableYes_clicked()
+{
+    QJsonObject object;
+    object.insert("avaliable",1);
+    QJsonDocument document;
+    document.setObject(object);
+    QString json_str(document.toJson());
+    changeReaderOther(json_str);
+}
+
+void ReaderManageForm::on_btn_avaliableNo_clicked()
+{
+    QJsonObject object;
+    object.insert("avaliable",0);
+    QJsonDocument document;
+    document.setObject(object);
+    QString json_str(document.toJson());
+    changeReaderOther(json_str);
+}
+
+void ReaderManageForm::on_btn_clearArrears_clicked()
+{
+    QJsonObject object;
+    object.insert("arrears",0);
+    QJsonDocument document;
+    document.setObject(object);
+    QString json_str(document.toJson());
+    changeReaderOther(json_str);
+}
+
+void ReaderManageForm::changeReaderOther(QString json_str)
+{
+    int row = ui->tv->currentIndex().row();
+    if(row>=0){
+        QString id = ui->tv->model()->data(ui->tv->model()->index(row,0)).toString();
+
+        QByteArray postData = Tool::getInstance()->getRequestData(
+                    QStringList()<<"barcode"<<"data",
+                    QStringList()<<id<<json_str
+                    );
+        QNetworkRequest req(QUrl(Tool::urlRoot+"reader/change/other"));
+        req.setHeader(QNetworkRequest::ContentTypeHeader,"application/x-www-form-urlencoded");
+        netManager->post(req,postData);
     }
 }

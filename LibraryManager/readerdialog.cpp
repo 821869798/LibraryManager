@@ -6,6 +6,7 @@
 #include "booksearchform.h"
 #include "settingform.h"
 #include "readerinfoform.h"
+#include "logindialog.h"
 
 ReaderDialog::ReaderDialog(QWidget *parent) :
     QDialog(parent),
@@ -118,6 +119,8 @@ void ReaderDialog::InitStyle()
         ui->btnBorrow->setIconSize(QSize(40,40));
         ui->btnInfo->setIcon(QIcon(":/image/login.png"));
         ui->btnInfo->setIconSize(QSize(40,40));
+        ui->btnLogout->setIcon(QIcon(":/image/power.png"));
+        ui->btnLogout->setIconSize(QSize(40,40));
         this->setWindowIcon(QIcon(":/image/home.png"));
         this->setWindowTitle("读者窗口");
 
@@ -183,4 +186,11 @@ void ReaderDialog::on_btnInfo_clicked()
 {
     fs->hideAll();
     fs->showWidget(6);
+}
+
+void ReaderDialog::on_btnLogout_clicked()
+{
+    LoginDialog *login = new LoginDialog;
+    login->show();
+    this->hide();
 }

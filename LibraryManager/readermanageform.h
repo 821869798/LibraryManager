@@ -30,6 +30,14 @@ private slots:
 
     void on_btn_edit_clicked();
 
+    void on_btn_del_clicked();
+
+    void on_btn_avaliableYes_clicked();
+
+    void on_btn_avaliableNo_clicked();
+
+    void on_btn_clearArrears_clicked();
+
 private:
     Ui::ReaderManageForm *ui;
 
@@ -40,6 +48,7 @@ private:
     QNetworkAccessManager * netManager;
     int searchType;
     QButtonGroup *radioGroup;
+    void changeReaderOther(QString json_str);
 };
 
 #endif // READERMANAGEFORM_H

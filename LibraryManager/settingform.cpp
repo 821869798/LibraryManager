@@ -70,6 +70,7 @@ void SettingForm::on_btn_Ok_clicked()
                 QStringList()<<"old"<<"new",
                 QStringList()<<byte1<<byte2
                 );
+    req.setHeader(QNetworkRequest::ContentTypeHeader,"application/x-www-form-urlencoded");
     netManager->post(req,postData);
 }
 

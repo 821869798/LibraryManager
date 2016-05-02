@@ -1,6 +1,7 @@
 #include "visitordialog.h"
 #include "ui_visitordialog.h"
 #include "styletool.h"
+#include "logindialog.h"
 #include <QMenu>
 #include <QAction>
 
@@ -91,6 +92,8 @@ void VisitorDialog::InitStyle()
 
         ui->btnSearch->setIcon(QIcon(":/image/search.png"));
         ui->btnSearch->setIconSize(QSize(40,40));
+        ui->btnLogout->setIcon(QIcon(":/image/power.png"));
+        ui->btnLogout->setIconSize(QSize(40,40));
         this->setWindowIcon(QIcon(":/image/home.png"));
         this->setWindowTitle("游客窗口");
 
@@ -153,3 +156,17 @@ void VisitorDialog::on_btnSearch_clicked()
     bsf->show();
 }
 
+
+void VisitorDialog::on_pushButton_clicked()
+{
+    LoginDialog *login = new LoginDialog;
+    login->show();
+    this->hide();
+}
+
+void VisitorDialog::on_btnLogout_clicked()
+{
+    LoginDialog *login = new LoginDialog;
+    login->show();
+    this->hide();
+}

@@ -87,3 +87,5 @@ FORMS    += \
 
 RESOURCES += \
     rc.qrc
+
+RC_FILE = app.rc

@@ -1,6 +1,7 @@
 #include "rootadmindialog.h"
 #include "ui_rootadmindialog.h"
 #include "styletool.h"
+#include "logindialog.h"
 #include <QMenu>
 #include <QAction>
 
@@ -99,6 +100,8 @@ void RootAdminDialog::InitStyle()
         ui->btnSearch->setIconSize(QSize(40,40));
         ui->btnSetting->setIcon(QIcon(":/image/setting.png"));
         ui->btnSetting->setIconSize(QSize(40,40));
+        ui->btnLogout->setIcon(QIcon(":/image/power.png"));
+        ui->btnLogout->setIconSize(QSize(40,40));
         this->setWindowIcon(QIcon(":/image/home.png"));
 
         //添加换肤菜单
@@ -213,4 +216,11 @@ void RootAdminDialog::on_btnSetting_clicked()
 {
     fs->hideAll();
     fs->showWidget(4);
+}
+
+void RootAdminDialog::on_btnLogout_clicked()
+{
+    LoginDialog *login = new LoginDialog;
+    login->show();
+    this->hide();
 }

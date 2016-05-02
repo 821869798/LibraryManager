@@ -3,6 +3,7 @@ from models import *
 import json
 from urllib.parse import unquote
 import datetime
+import decimal
 
 def strtoint(s, default):
     try:
@@ -59,7 +60,14 @@ def strtoint(s, default):
 # date1 = datetime.date(2016,6,7)
 # date2 = datetime.date(2016,7,10)
 # print((date1-date2).days)
-barcode = "10000001"
-book = Book.query.filter_by(barcode=barcode).first()
+# barcode = "10000001"
+# book = Book.query.filter_by(barcode=barcode).first()
+# reader = Reader.query.filter_by(barcode="1200110101").first()
+# print(reader.borrows.count())
+
 reader = Reader.query.filter_by(barcode="1200110101").first()
-print(reader.borrows.count())
+# a = 0
+# reader.arrears = and
+db.session.add(reader)
+db.session.commit()
+print(reader.arrears)

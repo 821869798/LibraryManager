@@ -512,6 +512,19 @@
       </spacer>
      </item>
      <item>
+      <widget class="QPushButton" name="bt_login">
+       <property name="font">
+        <font>
+         <family>微软雅黑</family>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>返回登陆界面</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QPushButton" name="btn_ok">
        <property name="font">
         <font>

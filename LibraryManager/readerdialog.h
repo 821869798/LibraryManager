@@ -46,6 +46,8 @@ private slots:
 
     void on_btnInfo_clicked();
 
+    void on_btnLogout_clicked();
+
 private:
     QPoint mousePoint;
     bool mousePressed;

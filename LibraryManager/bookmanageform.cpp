@@ -306,6 +306,7 @@ void BookManageForm::on_typeSubmitBtn_clicked()
         }
         QByteArray postData = Tool::getInstance()->getRequestData(list1,list2);
         QNetworkRequest req(QUrl(Tool::urlRoot+"booktype/new"));
+        req.setHeader(QNetworkRequest::ContentTypeHeader,"application/x-www-form-urlencoded");
         netManager->post(req,postData);
     }else if(bookClassState==2){
         QString name = ui->typeNameEdit->text().trimmed();
@@ -318,6 +319,7 @@ void BookManageForm::on_typeSubmitBtn_clicked()
                     QStringList()<<"id"<<"name"<<"borrownum",
                     QStringList()<<QString::number(currentClass)<<name<<borrow);
         QNetworkRequest req(QUrl(Tool::urlRoot+"booktype/change"));
+        req.setHeader(QNetworkRequest::ContentTypeHeader,"application/x-www-form-urlencoded");
         netManager->post(req,postData);
 
 //        QSqlQuery query(Tool::getInstance()->getDb());

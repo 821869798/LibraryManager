@@ -176,6 +176,7 @@ void AddAdminDialog::on_btnOk_clicked()  //添加管理员的按键事件
     }
 
     QNetworkRequest req(QUrl(Tool::urlRoot+"adminer/new"));
+    req.setHeader(QNetworkRequest::ContentTypeHeader,"application/x-www-form-urlencoded");
     mutex = false;
     netManager->post(req,postData);
 }

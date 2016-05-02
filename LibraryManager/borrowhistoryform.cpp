@@ -165,6 +165,7 @@ void BorrowHistoryForm::on_btn_renew_all_clicked()
                 QStringList()<<json_str
                 );
     QNetworkRequest req(QUrl(Tool::urlRoot+"borrow/renew"));
+    req.setHeader(QNetworkRequest::ContentTypeHeader,"application/x-www-form-urlencoded");
     netManager->post(req,postData);
 }
 

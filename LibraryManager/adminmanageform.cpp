@@ -62,6 +62,7 @@ void AdminManageForm::on_delAdminBtn_clicked()
             QModelIndex index = ui->tv->model()->index(row,0);
             QString id = ui->tv->model()->data(index).toString();
             QNetworkRequest req(QUrl(Tool::urlRoot+"adminer/delete"));
+            req.setHeader(QNetworkRequest::ContentTypeHeader,"application/x-www-form-urlencoded");
             QByteArray postData;
             postData = Tool::getInstance()->getRequestData(
                         QStringList()<<"username",

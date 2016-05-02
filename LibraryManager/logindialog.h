@@ -40,6 +40,7 @@ private slots:
 
     void on_btn_return_clicked();
 
+    void scrollCaption();
 private:
     Ui::LoginDialog *ui;
     QPoint mousePoint;
@@ -49,6 +50,7 @@ private:
     void init();
 
     QNetworkAccessManager * netManager;
+    QString tipString;
 };
 
 #endif // LOGINDIALOG_H

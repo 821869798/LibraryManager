@@ -274,6 +274,7 @@ void BookEditDialog::on_btnOk_clicked()  //提交按钮
         req.setUrl(QUrl(Tool::urlRoot+"book/new"));
     else
         req.setUrl(QUrl(Tool::urlRoot+"book/change"));
+    req.setHeader(QNetworkRequest::ContentTypeHeader,"application/x-www-form-urlencoded");
     netManager->post(req,postData);
 
 
