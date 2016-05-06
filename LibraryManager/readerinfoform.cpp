@@ -51,8 +51,8 @@ void ReaderInfoForm::initByArray(QJsonArray array)
     ui->lab_date->setText(ui->lab_date->text()+array[4].toVariant().toString());
     ui->label_licenseid->setText(ui->label_licenseid->text()+array[5].toVariant().toString());
     ui->label_licensenum->setText(ui->label_licensenum->text()+array[6].toVariant().toString());
-    ui->lab_phone->setText(ui->lab_phone->text()+array[7].toVariant().toString());
-    ui->lab_email->setText(ui->lab_email->text()+array[8].toVariant().toString());
+    ui->le_phone->setText(array[7].toVariant().toString());
+    ui->le_email->setText(array[8].toVariant().toString());
     int avaliable = array[9].toInt();
     if(avaliable)
     {
@@ -73,9 +73,9 @@ void ReaderInfoForm::finishHttp(QNetworkReply *reply)
     {
         QString repData = QString(reply->readAll());
         QString path = reply->url().path();
-        if(repData!="false")
+        if(path=="/reader/getself")
         {
-            if(path=="/reader/getself")
+            if(repData!="false")
             {
                 QJsonParseError json_error;
                 QJsonDocument jsonDocument = QJsonDocument::fromJson(repData.toUtf8(), &json_error);
@@ -84,14 +84,42 @@ void ReaderInfoForm::finishHttp(QNetworkReply *reply)
                     initByArray(jsonDocument.array());
                 }
             }
+            else
+            {
+                StyleTool::getInstance()->messageBoxError("获取数据失败");
+            }
         }
-        else
+        if(path=="/reader/changeself")
         {
-            StyleTool::getInstance()->messageBoxError("获取数据失败");
+            if(repData!="false")
+            {
+                StyleTool::getInstance()->messageBoxInfo("修改成功！");
+            }
+            else
+            {
+                StyleTool::getInstance()->messageBoxError("修改失败！");
+            }
         }
     }
     else
     {
         StyleTool::getInstance()->netError();
+    }
+}
+
+void ReaderInfoForm::on_btn_submit_clicked()
+{
+
+    int ok = StyleTool::getInstance()->messageBoxQuesion("确认提交修改的个人信息？");
+    if(ok==1){
+        QString email = ui->le_email->text();
+        QString phone = ui->le_phone->text();
+        QByteArray postData = Tool::getInstance()->getRequestData(
+                    QStringList()<<"email"<<"phone",
+                    QStringList()<<email<<phone
+                    );
+        QNetworkRequest req(QUrl(Tool::urlRoot+"reader/changeself"));
+        req.setHeader(QNetworkRequest::ContentTypeHeader,"application/x-www-form-urlencoded");
+        netManager->post(req,postData);
     }
 }

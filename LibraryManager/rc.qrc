@@ -46,5 +46,7 @@
         <file>image/submit.png</file>
         <file>image/user.png</file>
         <file>image/power.png</file>
+        <file>image/left.png</file>
+        <file>image/right.png</file>
     </qresource>
 </RCC>

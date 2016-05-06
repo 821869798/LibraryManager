@@ -35,7 +35,8 @@ SOURCES += main.cpp \
     borrowhistoryform.cpp \
     borrowdialog.cpp \
     borrowcompletedialog.cpp \
-    readerinfoform.cpp
+    readerinfoform.cpp \
+    borrowinfodialog.cpp
 
 HEADERS  += \
     logindialog.h \
@@ -61,7 +62,8 @@ HEADERS  += \
     borrowhistoryform.h \
     borrowdialog.h \
     borrowcompletedialog.h \
-    readerinfoform.h
+    readerinfoform.h \
+    borrowinfodialog.h
 
 FORMS    += \
     logindialog.ui \
@@ -83,7 +85,8 @@ FORMS    += \
     borrowhistoryform.ui \
     borrowdialog.ui \
     borrowcompletedialog.ui \
-    readerinfoform.ui
+    readerinfoform.ui \
+    borrowinfodialog.ui
 
 RESOURCES += \
     rc.qrc

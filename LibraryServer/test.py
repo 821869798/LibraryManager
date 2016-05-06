@@ -71,4 +71,15 @@ def strtoint(s, default):
 # db.session.add(reader)
 # db.session.commit()
 # print(reader.arrears)
-print("gagag阿迪斯")
+# books = Book.query.order_by(Book.allcount.desc()).offset(0).limit(5).all()
+# # print(books)
+# # books.reverse()
+# print(books)
+# for book in books:
+#     print(book.barcode)
+#query = db.session.query(Book).join(History).filter(History.book_id == Book.id).group_by(Book).order_by(db.func.count(History.id)).all()
+#query = db.session.query(Book).outerjoin(History).group_by(Book).order_by(db.desc(db.func.count(History.id))).all()
+# query = db.session.query(Book).outerjoin(History).group_by(Book).order_by(History.rdate).all()
+# for book in query:
+#     print(book.barcode)
+# print(query)

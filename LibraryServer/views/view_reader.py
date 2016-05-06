@@ -42,17 +42,6 @@ def reader_getone():
                 return json.dumps(reader.toArrayData()) 
     return "false"
 
-#读者自己获取信息
-@app.route("/reader/getself",methods=["GET"])
-def reader_getself():
-    logintype = tool.strtoint(session.get("logintype"),-1)
-    username = session.get("username")
-    if logintype is 0 and username:
-        reader = Reader.query.filter_by(barcode=username).first()
-        if reader:
-            return json.dumps(reader.toArrayData())
-    return "false"
-
 #更改读者信息
 @app.route("/reader/change",methods=["POST"])
 def reader_change():
@@ -103,6 +92,7 @@ def reader_new():
                 return "true"
     return "false"
 
+#删除读者
 @app.route("/reader/delete",methods=["GET"])
 def reader_delete():
     if tool.readermanageValid(session):
@@ -121,6 +111,7 @@ def reader_delete():
                 return "true"
     return "false"
 
+#更改其他信息
 @app.route("/reader/change/other",methods=["POST"])
 def reader_change_other():
     if tool.readermanageValid(session):
@@ -134,6 +125,34 @@ def reader_change_other():
                     reader.avaliable = dataDict["avaliable"]
                 if "arrears" in dataDict:
                     reader.arrears = dataDict["arrears"]
+                db.session.add(reader)
+                db.session.commit()
+                return "true"
+    return "false"
+
+#读者自己获取信息
+@app.route("/reader/getself",methods=["GET"])
+def reader_getself():
+    logintype = tool.strtoint(session.get("logintype"),-1)
+    username = session.get("username")
+    if logintype is 0 and username:
+        reader = Reader.query.filter_by(barcode=username).first()
+        if reader:
+            return json.dumps(reader.toArrayData())
+    return "false"
+
+@app.route("/reader/changeself",methods=["POST"])
+def reader_changeself():
+    logintype = tool.strtoint(session.get("logintype"),-1)
+    username = session.get("username")
+    if logintype is 0 and username:
+        reader = Reader.query.filter_by(barcode=username).first()
+        if reader:
+            email = request.form.get("email")
+            phone = request.form.get("phone")
+            if email is not None and phone is not None:
+                reader.email = email
+                reader.phone = phone
                 db.session.add(reader)
                 db.session.commit()
                 return "true"

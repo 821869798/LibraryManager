@@ -95,11 +95,11 @@
     <widget class="QWidget" name="widget_history" native="true">
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
-       <layout class="QHBoxLayout" name="h2">
+       <layout class="QHBoxLayout" name="h2" stretch="0,1,0,0,10">
         <item>
-         <widget class="QLabel" name="label">
+         <widget class="QPushButton" name="btn_front">
           <property name="text">
-           <string>页码</string>
+           <string/>
           </property>
          </widget>
         </item>
@@ -110,6 +110,13 @@
           </property>
           <property name="maximum">
            <number>999999</number>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btn_next">
+          <property name="text">
+           <string/>
           </property>
          </widget>
         </item>

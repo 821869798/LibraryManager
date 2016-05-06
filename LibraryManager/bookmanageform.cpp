@@ -29,6 +29,8 @@ void BookManageForm::init()
     ui->typeAddBtn->setIcon(QIcon(":/image/add.png"));
     ui->typeDelBtn->setIcon(QIcon(":/image/min.png"));
     ui->typeEditBtn->setIcon(QIcon(":/image/edit.png"));
+    ui->btn_front->setIcon(QIcon(":/image/left.png"));
+    ui->btn_next->setIcon(QIcon(":/image/right.png"));
 
     netManager = new QNetworkAccessManager;
     netManager->setCookieJar(Tool::getInstance()->getCookieJar());
@@ -37,7 +39,7 @@ void BookManageForm::init()
     //初始化tableviewtc
     QStandardItemModel *model = new QStandardItemModel;
     QStringList list;
-    list<<"图书条形码"<<"书名"<<"作者"<<"图书类型"<<"馆藏总数"<<"在馆数";
+    list<<"图书条形码"<<"书名"<<"作者"<<"图书类型"<<"馆藏总数"<<"在馆数"<<"借阅历史次数";
     model->setHorizontalHeaderLabels(list);
     ui->tv->setModel(model);
     ui->tv->setSortingEnabled(true);
@@ -89,7 +91,7 @@ void BookManageForm::initBookData(int page) //初始化图书数据
     ui->idEdit->setText("");
     ui->box_page->setValue(page);
 
-    QNetworkRequest req(QUrl(Tool::urlRoot+"book/query?page="+QString::number(page-1)));
+    QNetworkRequest req(QUrl(Tool::urlRoot+"book/manage/query?page="+QString::number(page-1)));
     netManager->get(req);
 
 
@@ -344,5 +346,23 @@ void BookManageForm::on_typeCancelBtn_clicked()
 void BookManageForm::on_btn_page_clicked()
 {
     int value = ui->box_page->value();
+    initBookData(value);
+}
+
+void BookManageForm::on_btn_front_clicked()
+{
+    int value = ui->box_page->value();
+    value--;
+    ui->box_page->setValue(value);
+    value = ui->box_page->value();
+    initBookData(value);
+}
+
+void BookManageForm::on_btn_next_clicked()
+{
+    int value = ui->box_page->value();
+    value++;
+    ui->box_page->setValue(value);
+    value = ui->box_page->value();
     initBookData(value);
 }

@@ -179,3 +179,14 @@ def book_query():
             booklist = booklist.filter(Book.bookshelf==tool.strtoint(query_str,0))
     booklist = booklist.offset(Book.pageCount*page).limit(Book.pageCount).all()
     return json.dumps(Book.getsome(booklist))
+
+#图书管理查询 sort->0 默认排序 sort->1 出版时间排序 sort->2 借阅次数排序 
+@app.route("/book/manage/query",methods=["GET"])
+def book_manage_query():
+    if tool.bookmanageValid(session):
+        page = tool.strtoint(request.args.get("page"),0)
+        sort = tool.strtoint(request.args.get("sort"),0)
+        reverse = tool.strtoint(request.args.get("reverse"),0)
+        booklist = Book.query
+
+    return "false"

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>598</width>
-    <height>333</height>
+    <width>678</width>
+    <height>416</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -158,11 +158,17 @@
          <widget class="QTableView" name="tv"/>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="1,2,1,2,1,1,1">
+         <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="1,2,1,1,2,1,1,1">
           <item>
-           <widget class="QLabel" name="label_4">
+           <widget class="QPushButton" name="btn_front">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>16777215</height>
+             </size>
+            </property>
             <property name="text">
-             <string>页码</string>
+             <string/>
             </property>
            </widget>
           </item>
@@ -173,6 +179,13 @@
             </property>
             <property name="maximum">
              <number>999999</number>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btn_next">
+            <property name="text">
+             <string/>
             </property>
            </widget>
           </item>
@@ -214,6 +227,58 @@
            <widget class="QPushButton" name="bookDelBtn">
             <property name="text">
              <string/>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_7">
+          <item>
+           <widget class="QLabel" name="lab_sort">
+            <property name="text">
+             <string>TextLabel</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="checkBox">
+            <property name="text">
+             <string>倒序</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_5">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btn_sortTime">
+            <property name="text">
+             <string>根据时间排序</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btn_sortborrow">
+            <property name="text">
+             <string>根据借阅数量</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btn_noSort">
+            <property name="text">
+             <string>不排序</string>
             </property>
            </widget>
           </item>

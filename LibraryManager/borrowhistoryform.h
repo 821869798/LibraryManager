@@ -25,6 +25,10 @@ private slots:
     void on_btn_renew_all_clicked();
     void on_btn_getHistory_clicked();
 
+    void on_btn_front_clicked();
+
+    void on_btn_next_clicked();
+
 private:
     Ui::BorrowHistoryForm *ui;
 

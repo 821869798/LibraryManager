@@ -32,6 +32,8 @@ void ReaderManageForm::init()
     ui->btn_new->setIcon(QIcon(":/image/add.png"));
     ui->btn_del->setIcon(QIcon(":/image/min.png"));
     ui->btn_edit->setIcon(QIcon(":/image/edit.png"));
+    ui->btn_front->setIcon(QIcon(":/image/left.png"));
+    ui->btn_next->setIcon(QIcon(":/image/right.png"));
     ui->lineEdit->setMaxLength(20);
 
     searchType = 0;
@@ -166,6 +168,39 @@ void ReaderManageForm::on_btn_jump_clicked()
     initByData(tempData);
 }
 
+void ReaderManageForm::on_btn_front_clicked()
+{
+    QString tempData;
+    ui->spinBox->setValue(ui->spinBox->value()-1);
+    int value = ui->spinBox->value()-1;
+    if(searchType)
+    {
+        tempData = getData+"&page="+QString::number(value);
+    }
+    else
+    {
+        tempData = "page="+QString::number(value);
+    }
+    initByData(tempData);
+}
+
+void ReaderManageForm::on_btn_next_clicked()
+{
+    QString tempData;
+    ui->spinBox->setValue(ui->spinBox->value()+1);
+    int value = ui->spinBox->value()-1;
+    if(searchType)
+    {
+        tempData = getData+"&page="+QString::number(value);
+    }
+    else
+    {
+        tempData = "page="+QString::number(value);
+    }
+    initByData(tempData);
+}
+
+
 void ReaderManageForm::on_btn_query_clicked()
 {
     QString queryStr = ui->lineEdit->text().trimmed();
@@ -287,3 +322,4 @@ void ReaderManageForm::changeReaderOther(QString json_str)
         netManager->post(req,postData);
     }
 }
+

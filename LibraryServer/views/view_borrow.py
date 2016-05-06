@@ -62,10 +62,9 @@ def borrow_return():
     if jsonData:
         jsonDict = json.loads(unquote(jsonData))
         username = jsonDict.get("username")
-        password = jsonDict.get("password")
         booklist = jsonDict.get("booklist")
-        if username and password and  booklist:
-            reader = Reader.query.filter_by(barcode=username,password=password).first()
+        if username and  booklist:
+            reader = Reader.query.filter_by(barcode=username).first()
             if reader:
                 replist = []
                 repDict = {"barcode":reader.barcode,"name":reader.name,"rtype":reader.rtype}
@@ -91,11 +90,13 @@ def borrow_return():
                                 reader.arrears += decimal.Decimal("%f"%(days*0.1))
                                 days = ""+str(days)+"天"
                             replist.append([book.barcode,book.name,book.author,str(history.bdate),str(history.rdate),days])
+                if reader.arrears > 10:
+                    reader.avaliable = 0
                 db.session.add(reader)
                 db.session.commit()
                 if replist:
                     repDict["returnlist"] = replist
-                return json.dumps(repDict)                         
+                return json.dumps(repDict)
     return "false"
 
 #获取借阅列表

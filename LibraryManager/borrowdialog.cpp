@@ -34,11 +34,13 @@ void BorrowDialog::init()
         this->setWindowTitle("还书窗口");
         ui->btn_add->setText("添加还书");
         ui->btn_ok->setText("确认还书");
+        ui->widget_borrow->hide();
     }
     else
     {
         ui->lab_Title->setText("借书窗口");
         this->setWindowTitle("借书窗口");
+        ui->widget_return->hide();
     }
     QStandardItemModel *model = new QStandardItemModel;
     QStringList headList;
@@ -277,14 +279,20 @@ void BorrowDialog::on_btn_ok_clicked()
     QStandardItemModel *model = (QStandardItemModel*)ui->tv->model();
     if(model->rowCount()==0)
     {
-        StyleTool::getInstance()->messageBoxError("借书数量不能零！");
+        StyleTool::getInstance()->messageBoxError("借书还书数量不能零！");
         return;
     }
     QString barcode = ui->le_barcode->text().trimmed();
     QString pwd = ui->le_pwd->text().trimmed();
-    if(barcode==""||pwd=="")
+    QString barcode_return = ui->le_barcode_return->text().trimmed();
+    if(currentType==0&&(barcode==""||pwd==""))
     {
-        StyleTool::getInstance()->messageBoxError("条形码和密码不能为空!");
+        StyleTool::getInstance()->messageBoxError("读者条形码和密码不能为空!");
+        return;
+    }
+    if(currentType==1&&barcode_return=="")
+    {
+        StyleTool::getInstance()->messageBoxError("读者条形码不能为空!");
         return;
     }
     pwd = Tool::getInstance()->getMd5String(pwd);
@@ -294,8 +302,16 @@ void BorrowDialog::on_btn_ok_clicked()
         array.append(model->index(i,0).data().toString());
     }
     QJsonObject object;
-    object.insert("username",barcode);
-    object.insert("password",pwd);
+
+    if(currentType)  //还书
+    {
+        object.insert("username",barcode_return);
+    }
+    else   //借书
+    {
+        object.insert("username",barcode);
+        object.insert("password",pwd);
+    }
     object.insert("booklist",array);
     QJsonDocument document;
     document.setObject(object);

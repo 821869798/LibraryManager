@@ -50,11 +50,11 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,2,0,0,0">
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_4">
+      <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="0,1,0,1">
        <item>
-        <widget class="QLabel" name="label_2">
+        <widget class="QPushButton" name="btn_front">
          <property name="text">
-          <string>页码</string>
+          <string/>
          </property>
         </widget>
        </item>
@@ -68,6 +68,13 @@
          </property>
          <property name="value">
           <number>1</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btn_next">
+         <property name="text">
+          <string/>
          </property>
         </widget>
        </item>

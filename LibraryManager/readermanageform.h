@@ -38,6 +38,10 @@ private slots:
 
     void on_btn_clearArrears_clicked();
 
+    void on_btn_front_clicked();
+
+    void on_btn_next_clicked();
+
 private:
     Ui::ReaderManageForm *ui;
 

@@ -43,6 +43,10 @@ private slots:
 
     void on_btn_page_clicked();
 
+    void on_btn_front_clicked();
+
+    void on_btn_next_clicked();
+
 private:
     Ui::BookManageForm *ui;
     void initBookData(int page);

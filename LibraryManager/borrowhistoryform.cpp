@@ -17,6 +17,9 @@ BorrowHistoryForm::~BorrowHistoryForm()
 
 void BorrowHistoryForm::init()
 {
+    ui->btn_front->setIcon(QIcon(":/image/left.png"));
+    ui->btn_next->setIcon(QIcon(":/image/right.png"));
+
     ui->widget_history->hide();
     firstShow = true;
     netManager = new QNetworkAccessManager;
@@ -172,6 +175,20 @@ void BorrowHistoryForm::on_btn_renew_all_clicked()
 
 void BorrowHistoryForm::on_btn_getHistory_clicked()
 {
+    int value = ui->spinBox->value();
+    showBorrowHistory(value);
+}
+
+void BorrowHistoryForm::on_btn_front_clicked()
+{
+    ui->spinBox->setValue(ui->spinBox->value()-1);
+    int value = ui->spinBox->value();
+    showBorrowHistory(value);
+}
+
+void BorrowHistoryForm::on_btn_next_clicked()
+{
+    ui->spinBox->setValue(ui->spinBox->value()+1);
     int value = ui->spinBox->value();
     showBorrowHistory(value);
 }
