@@ -84,10 +84,20 @@ class Book(db.Model):
         str(self.price),self.page,self.bookshelf,self.allcount,self.allcount-self.borrows.count()]
         return arr
 
+    def toManageData(self):
+        arr = [self.barcode, self.name,self.author,self.booktype.name,self.allcount,self.allcount-self.borrows.count(),self.historys.count()]
+        return arr
+
     @staticmethod
     def getsome(datalist):
         for i in range(len(datalist)):
             datalist[i] = datalist[i].toArrayData()
+        return datalist
+
+    @staticmethod
+    def getManageData(datalist):
+        for i in range(len(datalist)):
+            datalist[i] = datalist[i].toManageData()
         return datalist
 
 
@@ -167,6 +177,9 @@ class Borrow(db.Model):
         str(self.rdate),self.renew]
         return arr
 
+    def toManageData(self):
+        arr = [self.reader.barcode,self.reader.name,str(self.bdate),str(self.rdate),self.renew]
+        return arr
 # 借阅历史
 
 
@@ -184,8 +197,17 @@ class History(db.Model):
         if days is 0:
             days = "无"
         else:
-            days = ""+str(days)+"天"
+            days = str(days)+"天"
         arr = [self.book.barcode,self.book.name,self.book.author,str(self.bdate),str(self.rdate),days]
+        return arr
+
+    def toManageData(self):
+        days = self.overdue
+        if days is 0:
+            days = "无"
+        else:
+            days = str(days)+"天"
+        arr = [self.reader.barcode,self.reader.name,str(self.bdate),str(self.rdate),days]
         return arr
 
 # 遗失图书

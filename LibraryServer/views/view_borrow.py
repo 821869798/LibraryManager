@@ -128,6 +128,7 @@ def borrow_history():
             return json.dumps(historylist)
     return "false"
 
+#续借
 @app.route("/borrow/renew",methods=["POST"])
 def borrow_renew():
     logintype = tool.strtoint(session.get("logintype"),-1)
@@ -149,4 +150,31 @@ def borrow_renew():
                     db.session.add(borrow)
             db.session.commit()
             return ("%d" % count)
+    return "false"
+
+@app.route("/borrow/manage/getborrow",methods=["GET"])
+def borrow_manage_getborrow():
+    if tool.bookmanageValid(session):
+        barcode = request.args.get("barcode")
+        if barcode:
+            book = Book.query.filter_by(barcode=barcode).first()
+            if book:
+                borrowlist =book.borrows.all()
+                for i,value in enumerate(borrowlist):
+                    borrowlist[i] = value.toManageData()
+                return json.dumps(borrowlist)
+    return "false"
+
+@app.route("/borrow/manage/history",methods=["GET"])
+def borrow_manage_history():
+    if tool.bookmanageValid(session):
+        barcode = request.args.get("barcode")
+        page = tool.strtoint(request.args.get("page"),0)
+        if barcode:
+            book = Book.query.filter_by(barcode=barcode).first()
+            if book:
+                historylist = book.historys.offset(History.pageCount*page).limit(History.pageCount).all()
+                for i,value in enumerate(historylist):
+                    historylist[i] = value.toManageData()
+                return json.dumps(historylist)
     return "false"

@@ -3,6 +3,7 @@
 #include "tool.h"
 #include "styletool.h"
 #include "bookeditdialog.h"
+#include "borrowinfodialog.h"
 
 BookManageForm::BookManageForm(QWidget *parent) :
     QWidget(parent),
@@ -20,6 +21,7 @@ BookManageForm::~BookManageForm()
 void BookManageForm::init()
 {
     firstShow = true;
+    sortType = 0;
 
     //初始化按钮图标
     ui->seartBtn->setIcon(QIcon(":/image/search.png"));
@@ -90,8 +92,9 @@ void BookManageForm::initBookData(int page) //初始化图书数据
 {
     ui->idEdit->setText("");
     ui->box_page->setValue(page);
-
-    QNetworkRequest req(QUrl(Tool::urlRoot+"book/manage/query?page="+QString::number(page-1)));
+    int reverse = ui->checkBox->isChecked();
+    QString getData = "page="+QString::number(page-1)+"&sort="+QString::number(sortType)+"&reverse="+QString::number(reverse);
+    QNetworkRequest req(QUrl(Tool::urlRoot+"book/manage/query?"+getData));
     netManager->get(req);
 
 
@@ -140,7 +143,7 @@ void BookManageForm::finishHttp(QNetworkReply *reply)
                 initBookClass();
                 StyleTool::getInstance()->messageBoxInfo("修改成功！");
             }
-            else if(path=="/book/query")
+            else if(path=="/book/manage/query")
             {
                 QJsonParseError json_error;
                 QJsonDocument jsonDocument = QJsonDocument::fromJson(repData.toUtf8(), &json_error);
@@ -180,9 +183,8 @@ void BookManageForm::on_seartBtn_clicked()
     QString queryStr = ui->idEdit->text();
     if(queryStr!="")
     {
-        QString getData = "page="+QString::number(0)+"&type=1&query="+QString(Tool::getInstance()->getUrlEncode(queryStr));
-        qDebug()<<getData;
-        QNetworkRequest req(QUrl(Tool::urlRoot+"book/query?"+getData));
+        QString getData = "page="+QString::number(0)+"&query="+QString(Tool::getInstance()->getUrlEncode(queryStr));
+        QNetworkRequest req(QUrl(Tool::urlRoot+"book/manage/query?"+getData));
         netManager->get(req);
     }
 
@@ -365,4 +367,42 @@ void BookManageForm::on_btn_next_clicked()
     ui->box_page->setValue(value);
     value = ui->box_page->value();
     initBookData(value);
+}
+
+void BookManageForm::on_btn_noSort_clicked()
+{
+    sortType = 0;
+    ui->lab_sort->setText("默认排序");
+    initBookData(1);
+}
+
+void BookManageForm::on_btn_sortTime_clicked()
+{
+    sortType = 1;
+    ui->lab_sort->setText("借阅次数排序");
+    initBookData(1);
+}
+
+void BookManageForm::on_btn_sortborrow_clicked()
+{
+    sortType = 2;
+    ui->lab_sort->setText("出版时间排序");
+    initBookData(1);
+}
+
+void BookManageForm::on_checkBox_clicked()
+{
+    initBookData(1);
+}
+
+void BookManageForm::on_btn_borrowinfo_clicked()
+{
+    int row = ui->tv->currentIndex().row();
+    if(row>=0){
+        QString barcode = ui->tv->model()->data(ui->tv->model()->index(row,0)).toString();
+        QString name = ui->tv->model()->data(ui->tv->model()->index(row,1)).toString();
+        QString author = ui->tv->model()->data(ui->tv->model()->index(row,2)).toString();
+        BorrowInfoDialog * borrowinfo = new BorrowInfoDialog(barcode,name,author);
+        borrowinfo->show();
+    }
 }

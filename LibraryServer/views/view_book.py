@@ -180,13 +180,33 @@ def book_query():
     booklist = booklist.offset(Book.pageCount*page).limit(Book.pageCount).all()
     return json.dumps(Book.getsome(booklist))
 
-#图书管理查询 sort->0 默认排序 sort->1 出版时间排序 sort->2 借阅次数排序 
+#图书管理查询 sort->0 默认排序 sort->1 出版时间排序 sort->2 借阅次数排序 reverse倒序
 @app.route("/book/manage/query",methods=["GET"])
 def book_manage_query():
     if tool.bookmanageValid(session):
         page = tool.strtoint(request.args.get("page"),0)
         sort = tool.strtoint(request.args.get("sort"),0)
         reverse = tool.strtoint(request.args.get("reverse"),0)
-        booklist = Book.query
-
+        query = request.args.get("query")
+        if query:
+            booklist = Book.query.filter_by(barcode=query).all()
+        else:
+            booklist = db.session.query(Book).outerjoin(History).group_by(Book)
+            if reverse is 0:
+                if sort is 0:
+                    booklist = booklist.order_by(Book.barcode)
+                elif sort is 1:
+                    booklist = booklist.order_by(db.desc(Book.date))
+                elif sort is 2:
+                    booklist = booklist.order_by(db.desc(db.func.count(History.id)))
+            else:
+                if sort is 0:
+                    booklist = booklist.order_by(db.desc(Book.barcode))
+                elif sort is 1:
+                    booklist = booklist.order_by(Book.date)
+                elif sort is 2:
+                    booklist = booklist.order_by(db.func.count(History.id))
+                    
+            booklist = booklist.offset(Book.pageCount*page).limit(Book.pageCount).all()
+        return json.dumps(Book.getManageData(booklist))
     return "false"

@@ -47,6 +47,16 @@ private slots:
 
     void on_btn_next_clicked();
 
+    void on_btn_noSort_clicked();
+
+    void on_btn_sortborrow_clicked();
+
+    void on_btn_sortTime_clicked();
+
+    void on_checkBox_clicked();
+
+    void on_btn_borrowinfo_clicked();
+
 private:
     Ui::BookManageForm *ui;
     void initBookData(int page);
@@ -54,6 +64,7 @@ private:
     int bookClassState;  //图书类别管理的编辑状态，0表示没有，1表示添加，2表示编辑
     int currentClass;
 
+    int sortType;  //排序类型 sortType->0 默认排序 sortType->1 出版时间排序 sortType->2 借阅次数排序
     bool mutex;
     int httpType;
     QNetworkAccessManager * netManager;
