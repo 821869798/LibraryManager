@@ -145,7 +145,7 @@ def borrow_renew():
                 borrow = reader.borrows.filter_by(book=book).first()
                 if borrow and borrow.renew > 0 :
                     borrow.renew -= 1
-                    borrow.rdate = borrow.rdate+datetime.timedelta(30)
+                    borrow.rdate = borrow.rdate+datetime.timedelta(book.booktype.borrownum)
                     count += 1
                     db.session.add(borrow)
             db.session.commit()

@@ -379,14 +379,14 @@ void BookManageForm::on_btn_noSort_clicked()
 void BookManageForm::on_btn_sortTime_clicked()
 {
     sortType = 1;
-    ui->lab_sort->setText("借阅次数排序");
+    ui->lab_sort->setText("出版时间排序");
     initBookData(1);
 }
 
 void BookManageForm::on_btn_sortborrow_clicked()
 {
     sortType = 2;
-    ui->lab_sort->setText("出版时间排序");
+    ui->lab_sort->setText("借阅次数排序");
     initBookData(1);
 }
 
