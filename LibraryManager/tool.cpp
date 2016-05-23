@@ -8,9 +8,9 @@ Tool::Tool()
     cookieJar = new QNetworkCookieJar;
     codec = QTextCodec::codecForName("utf-8");
 
-    db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName("library.db");
-    db.open();
+//    db = QSqlDatabase::addDatabase("QSQLITE");
+//    db.setDatabaseName("library.db");
+//    db.open();
     //initMapData();  //初始化获取图书类型以及有效证件的数据
 }
 
@@ -23,10 +23,6 @@ Tool *Tool::getInstance()
     return instance;
 }
 
-QSqlDatabase Tool::getDb() const
-{
-    return db;
-}
 
 //void Tool::initMapData()
 //{

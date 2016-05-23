@@ -1,6 +1,5 @@
 #ifndef TOOL_H
 #define TOOL_H
-#include <QtSql>
 #include <QDebug>
 #include <QMap>
 #include "sqldata.h"
@@ -16,7 +15,6 @@ public:
     Tool();
     static Tool * getInstance();
     static void setInstace(Tool *value);
-    QSqlDatabase getDb() const;
 //    void initMapData();
     QMap<QString,BookClassData> bookClass;
     QMap<QString,int> licenseMap;
@@ -34,7 +32,6 @@ public:
     void tableAppendData(QTableView *tv, QJsonArray array);
 private:
     static Tool *instance;
-    QSqlDatabase db;
     QNetworkCookieJar *cookieJar;
 
     QTextCodec *codec;
